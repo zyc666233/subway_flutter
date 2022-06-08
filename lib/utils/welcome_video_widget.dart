@@ -33,8 +33,7 @@ class _WelcomeVideoWidgetState extends State<WelcomeVideoWidget> {
     _controller.addListener(() {
       setState(() {
         //当视频播放完毕后，自动跳转页面
-        if (_controller.value.position.inSeconds ==
-            _controller.value.duration.inSeconds) {
+        if (_controller.value.position.inSeconds == _controller.value.duration.inSeconds) {
           NavigatorUtils.pushPageByFade(
             context: context,
             targPage: Notice(),

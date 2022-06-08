@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:subway_flutter/utils/search_bar_wigdet.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 //公告相关
@@ -38,21 +39,87 @@ class NoticePageState extends State<Notice> {
       debugShowCheckedModeBanner: false,
       // theme: Config.themeData,
       home: Scaffold(
-        body: WebView(
-          initialUrl: "http://0.0.0.0:9998/files/html/subway_map_test.html",
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _webViewController = webViewController;
-            // _loadHtmlFromAssets();
-          },
-          onPageFinished: (url) async {
-            // print(url);
-            // String jsContent = await rootBundle.loadString(jsPath);
-            // _webViewController?.runJavascript(jsContent);
-          },
+        body: Stack(
+          children: [
+            //第一层，地铁图
+            Positioned.fill(
+                child: WebView(
+              initialUrl: "http://0.0.0.0:9998/files/html/subway_map_test.html",
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _webViewController = webViewController;
+                // _loadHtmlFromAssets();
+              },
+              onPageFinished: (url) async {
+                // print(url);
+                // String jsContent = await rootBundle.loadString(jsPath);
+                // _webViewController?.runJavascript(jsContent);
+              },
+            )),
+            
+            //第二层，搜索栏
+            Positioned(
+              left: 5,
+              right: 5,
+              top: 15,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromARGB(255, 245, 245, 245),
+                      width: 0.0), //灰色的一层边框
+                  color: Color.fromARGB(255, 240, 240, 240),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(Icons.person),
+                        iconSize: 40,
+                        onPressed: (){},
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    Expanded(
+                      flex: 9,
+                      child: Column(
+                        children: [
+                          SearchBar(
+                            textController: TextEditingController(),
+                            hintText: "出发站点",
+                            onSubmitted: (value) {
+                              print("$value");
+                            },
+                            onChanged: (value) {
+                              print("$value");
+                            },
+                          ),
+                          SearchBar(
+                            textController: TextEditingController(),
+                            hintText: "到达站点",
+                            onSubmitted: (value) {
+                              print("$value");
+                            },
+                            onChanged: (value) {
+                              print("$value");
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          
+          ],
         ),
         floatingActionButton: FloatingActionButton(
-          child: Image.asset('assets/images/sub_way_img.png'),
+          child: Icon(Icons.search),
           onPressed: null,
           tooltip: '乘车码',
         ),

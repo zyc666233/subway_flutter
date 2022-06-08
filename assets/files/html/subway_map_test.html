@@ -17,6 +17,7 @@
         var adcode = adcodes["上海市"]["adcode"];
         window.cbk = function () {
             var mySubway = subway("mybox", {
+                easy: true,
                 adcode: adcodes["上海市"]["adcode"],
                 theme: "colorful",
                 client: 0,
@@ -29,7 +30,7 @@
             mySubway.event.on("subway.complete", function (ev, info) {
                 var id = info.id;
                 mySubway.getLineList(function (lines) {
-                    console.log(lines);
+                    // console.log(lines);
                     // var json_data = JSON.stringify(lines);
                     // console.log(json_data);
                 });
@@ -38,12 +39,12 @@
             //地铁图缩放
             mySubway.event.on("subway.move", function (ev, info) {
                 var id = info.id;
-                console.log(info);
+                // console.log(info);
             });
 
             //点击站点，显示此站点的信息窗体
             mySubway.event.on("station.touch", function (ev, info) {
-                console.log(info)
+                // console.log(info)
                 var id = info.id;
                 // mySubway.stopAnimation();
                 mySubway.addInfoWindow(id, {});
@@ -53,7 +54,7 @@
 
             //点击线路名，高亮此线路
             mySubway.event.on("lineName.touch", function (ev, info) {
-                console.log(info)
+                // console.log(info)
                 mySubway.showLine(info.id);
                 // var select_obj = qs('#g-select');
                 // mySubway.setFitView("mybox");
@@ -63,9 +64,9 @@
 
             //点击空白, 关闭infowindow
             mySubway.event.on("subway.touch", function () {
-                mySubway.clearInfoWindow();
-                mySubway.clearLine();
-                mySubway.clearRoute();
+                // mySubway.clearRoute();
+                // mySubway.clearInfoWindow();
+                // mySubway.clearLine();
             });
 
             //设置起点
@@ -91,9 +92,12 @@
                 endInfo = {};
             function route() {
                 if (startInfo.id && endInfo.id) {
-                    mySubway.route(startInfo.id, endInfo.id, {});
+                    mySubway.route(startInfo.id, endInfo.id, {
+                        closeBtn: true
+                    });
                     startInfo = {};
                     endInfo = {};
+                    mySubway.clearRoute();
                 }
             }
         };
