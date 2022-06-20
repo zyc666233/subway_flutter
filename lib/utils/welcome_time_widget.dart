@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:subway_flutter/pages/notice.dart';
+import 'package:subway_flutter/pages/homePage.dart';
 
 import 'log_utils.dart';
 import 'navigator_utils.dart';
@@ -79,7 +79,7 @@ class _WelcomeTimeWidgetState extends State<WelcomeTimeWidget> {
     LogUtils.e("计时完成去首页面");
     NavigatorUtils.pushPageByFade(
       context: context,
-      targPage: Notice(),
+      targPage: HomePage(),
       isReplace: true,
     );
   }

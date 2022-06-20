@@ -17,7 +17,7 @@
         var adcode = adcodes["上海市"]["adcode"];
         window.cbk = function () {
             var mySubway = subway("mybox", {
-                easy: true,
+                // easy: true,
                 adcode: adcodes["上海市"]["adcode"],
                 theme: "colorful",
                 client: 0,
@@ -34,6 +34,15 @@
                     // var json_data = JSON.stringify(lines);
                     // console.log(json_data);
                 });
+                document.getElementById('select_bg').onclick = function () {
+                    if (startInfo.id && endInfo.id) {
+                        mySubway.clearMarker(startInfo.id)
+                        mySubway.clearMarker(endInfo.id)
+                        startInfo = {}
+                        endInfo = {}
+                    }
+                    mySubway.clearRoute();
+                }
             });
 
             //地铁图缩放
@@ -62,11 +71,18 @@
                 mySubway.setCenter(center);
             });
 
-            //点击空白, 关闭infowindow
+            //点击空白处
             mySubway.event.on("subway.touch", function () {
-                // mySubway.clearRoute();
-                // mySubway.clearInfoWindow();
-                // mySubway.clearLine();
+                mySubway.clearInfoWindow();
+                mySubway.clearLine();
+                if (startInfo.id) {
+                    mySubway.clearMarker(startInfo.id)
+                    startInfo = {}
+                }
+                if (endInfo.id) {
+                    mySubway.clearMarker(endInfo.id)
+                    endInfo = {}
+                }
             });
 
             //设置起点
@@ -93,11 +109,10 @@
             function route() {
                 if (startInfo.id && endInfo.id) {
                     mySubway.route(startInfo.id, endInfo.id, {
-                        closeBtn: true
+                        closeBtn: false
                     });
-                    startInfo = {};
-                    endInfo = {};
-                    mySubway.clearRoute();
+                    console.log(startInfo.id);
+                    console.log(endInfo.id);
                 }
             }
         };
