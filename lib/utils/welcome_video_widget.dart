@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../pages/firstStartPage.dart';
-import '../pages/homePage.dart';
+import '../pages/first_start_page.dart';
+import '../pages/home_page.dart';
 import 'log_utils.dart';
 import 'navigator_utils.dart';
 import 'shared_preferences_utils.dart';

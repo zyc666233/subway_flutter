@@ -153,6 +153,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.6"
+  flutter_pickers:
+    dependency: "direct main"
+    description:
+      name: flutter_pickers
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.1.9"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -255,7 +262,7 @@ packages:
     source: hosted
     version: "3.0.0"
   jaguar_flutter_asset:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: jaguar_flutter_asset
       url: "https://pub.flutter-io.cn"
@@ -310,6 +317,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
+  multi_select_flutter:
+    dependency: "direct main"
+    description:
+      name: multi_select_flutter
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.1.2"
   path:
     dependency: transitive
     description:
@@ -526,7 +540,7 @@ packages:
     source: hosted
     version: "2.1.1"
   video_player:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: video_player
       url: "https://pub.flutter-io.cn"
@@ -561,7 +575,7 @@ packages:
     source: hosted
     version: "2.0.10"
   webview_flutter:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: webview_flutter
       url: "https://pub.flutter-io.cn"

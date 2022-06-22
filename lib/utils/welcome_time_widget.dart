@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:subway_flutter/pages/homePage.dart';
+import 'package:subway_flutter/pages/home_page.dart';
 
 import 'log_utils.dart';
 import 'navigator_utils.dart';

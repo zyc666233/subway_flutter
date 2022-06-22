@@ -40,6 +40,8 @@ class HomePageState extends State<HomePage> {
   String _userCompany = "";
   String _walkHomeTime = "";
   String _walkCompanyTime = "";
+  List<String> _addFrequentStations = [];
+  List<String> _addFrequentCities = [];
 
   @override
   void initState() {
@@ -60,51 +62,103 @@ class HomePageState extends State<HomePage> {
         // 侧边栏
         drawer: Drawer(
           child: Column(children: [
-            Row(
-              children: [
-                Expanded(
-                    child: UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: _headImage,
-                  ),
-                  accountEmail: Text(
-                    "所在城市：${_userCity}",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  accountName: Text(
-                    _userName,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ))
-              ],
-            ),
-            ListTile(
-              leading: CircleAvatar(child: Icon(Icons.home)),
-              title: Text(
-                _userHome,
-                style: TextStyle(fontSize: 18),
+            UserAccountsDrawerHeader(
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: _headImage,
               ),
-              trailing: Text(
-                "步行时长：${_walkHomeTime}",
-                style: TextStyle(fontSize: 15),
+              accountEmail: Text(
+                "所在城市：${_userCity}",
+                style: TextStyle(fontSize: 12),
+              ),
+              accountName: Text(
+                _userName,
+                style: TextStyle(fontSize: 16),
               ),
             ),
-            Divider(
-              color: Colors.black,
-            ),
-            ListTile(
-              leading: CircleAvatar(child: Icon(Icons.business)),
-              title: Text(
-                _userCompany,
-                style: TextStyle(fontSize: 18),
+            Container(
+              padding: EdgeInsets.only(bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom:
+                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+              child: ListTile(
+                leading: CircleAvatar(child: Icon(Icons.home)),
+                title: Text(
+                  _userHome,
+                  style: TextStyle(fontSize: 18),
+                ),
+                trailing: Text(
+                  "步行时长：${_walkHomeTime}",
+                  style: TextStyle(fontSize: 15),
+                ),
+                onTap: () {},
               ),
-              trailing: Text(
-                "步行时长：${_walkHomeTime}",
-                style: TextStyle(fontSize: 15),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom:
+                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+              child: ListTile(
+                leading: CircleAvatar(child: Icon(Icons.business)),
+                title: Text(
+                  _userCompany,
+                  style: TextStyle(fontSize: 18),
+                ),
+                trailing: Text(
+                  "步行时长：${_walkCompanyTime}",
+                  style: TextStyle(fontSize: 15),
+                ),
+                onTap: () {},
               ),
             ),
-            Divider(
-              color: Colors.black,
+            // Container(
+            //   padding: EdgeInsets.only(top: 5, bottom: 5),
+            //   decoration: BoxDecoration(
+            //       border: Border(
+            //           bottom:
+            //               BorderSide(width: 0.8, color: Colors.grey.shade400))),
+            //   child: ListTile(
+            //     leading: CircleAvatar(child: Icon(Icons.star)),
+            //     title: Text(
+            //       "常去车站：",
+            //       style: TextStyle(fontSize: 18),
+            //     ),
+            //     onTap: () {},
+            //   ),
+            // ),
+            Expanded(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: Container(
+                  padding: EdgeInsets.only(left: 8),
+                  child: ListView.builder(
+                      // shrinkWrap: true,
+                      itemCount: _addFrequentStations.length,
+                      itemBuilder: (context, index) {
+                        // 创建一个富文本，匹配的内容特别显示
+                        return Container(
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      width: 0.8, color: Colors.grey.shade400))),
+                          child: ListTile(
+                            style: ListTileStyle.list,
+                            leading: Icon(Icons.subway),
+                            title: Text(
+                              _addFrequentStations[index],
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            onTap: () {
+                              // Navigator.of(context).pop(_addFrequentStations[index]);
+                            },
+                          ),
+                        );
+                      }),
+                ),
+              ),
             )
           ]),
         ),
@@ -220,6 +274,12 @@ class HomePageState extends State<HomePage> {
     var userCompany = await SPUtil.getString("userCompany");
     var walkHomeTime = await SPUtil.getString("walkHomeTime");
     var walkCompanyTime = await SPUtil.getString("walkCompanyTime");
+    var addFrequentCities = await SPUtil.getString("addFrequentCities");
+    var addFrequentStations = await SPUtil.getString("addFrequentStations");
+    _addFrequentCities = jsonDecode(addFrequentCities!).cast<String>();
+    _addFrequentStations = jsonDecode(addFrequentStations!).cast<String>();
+    print(_addFrequentCities);
+    print(_addFrequentStations);
     // 获取本地保存的用户信息
     if (userName != null) {
       setState(() {

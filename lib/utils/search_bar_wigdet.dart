@@ -14,8 +14,7 @@ class SearchBar extends StatelessWidget {
       this.onChanged,
       this.hintText = '请输入内容',
       this.textInputType = TextInputType.text,
-      this.onSubmitted}
-  );
+      this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {

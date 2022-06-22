@@ -29,10 +29,15 @@
             //地铁加载完成，执行complete事件
             mySubway.event.on("subway.complete", function (ev, info) {
                 var id = info.id;
+                // mySubway.getCityList(function (citys){
+                //     // console.log(citys);
+                //     var json_data = JSON.stringify(citys);
+                //     console.log(json_data);
+                // });
                 mySubway.getLineList(function (lines) {
-                    // console.log(lines);
-                    // var json_data = JSON.stringify(lines);
-                    // console.log(json_data);
+                    console.log(lines);
+                    var json_data = JSON.stringify(lines);
+                    console.log(json_data);
                 });
                 document.getElementById('select_bg').onclick = function () {
                     if (startInfo.id && endInfo.id) {

@@ -1,0 +1,182 @@
+{
+    "1100": {
+        "city": "beijing",
+        "name": "北京市"
+    },
+    "1200": {
+        "city": "tianjin",
+        "name": "天津市"
+    },
+    "1301": {
+        "city": "shijiazhuang",
+        "name": "石家庄市"
+    },
+    "1401": {
+        "city": "taiyuan",
+        "name": "太原市"
+    },
+    "1501": {
+        "city": "huhehaote",
+        "name": "呼和浩特市"
+    },
+    "2101": {
+        "city": "shenyang",
+        "name": "沈阳市"
+    },
+    "2102": {
+        "city": "dalian",
+        "name": "大连市"
+    },
+    "2201": {
+        "city": "changchun",
+        "name": "长春市"
+    },
+    "2301": {
+        "city": "haerbin",
+        "name": "哈尔滨市"
+    },
+    "3100": {
+        "city": "shanghai",
+        "name": "上海市"
+    },
+    "3201": {
+        "city": "nanjing",
+        "name": "南京市"
+    },
+    "3202": {
+        "city": "wuxi",
+        "name": "无锡市"
+    },
+    "3203": {
+        "city": "xuzhou",
+        "name": "徐州市"
+    },
+    "3204": {
+        "city": "changzhou",
+        "name": "常州市"
+    },
+    "3205": {
+        "city": "suzhou",
+        "name": "苏州市"
+    },
+    "3301": {
+        "city": "hangzhou",
+        "name": "杭州市"
+    },
+    "3302": {
+        "city": "ningbo",
+        "name": "宁波市"
+    },
+    "3303": {
+        "city": "wenzhou",
+        "name": "温州市"
+    },
+    "3306": {
+        "city": "shaoxing",
+        "name": "绍兴市"
+    },
+    "3401": {
+        "city": "hefei",
+        "name": "合肥市"
+    },
+    "3402": {
+        "city": "wuhu",
+        "name": "芜湖市"
+    },
+    "3501": {
+        "city": "fuzhou",
+        "name": "福州市"
+    },
+    "3502": {
+        "city": "xiamen",
+        "name": "厦门市"
+    },
+    "3601": {
+        "city": "nanchang",
+        "name": "南昌市"
+    },
+    "3701": {
+        "city": "jinan",
+        "name": "济南市"
+    },
+    "3702": {
+        "city": "qingdao",
+        "name": "青岛市"
+    },
+    "4101": {
+        "city": "zhengzhou",
+        "name": "郑州市"
+    },
+    "4103": {
+        "city": "luoyang",
+        "name": "洛阳市"
+    },
+    "4201": {
+        "city": "wuhan",
+        "name": "武汉市"
+    },
+    "4301": {
+        "city": "changsha",
+        "name": "长沙市"
+    },
+    "4331": {
+        "city": "xiangxi",
+        "name": "湘西土家族苗族自治州"
+    },
+    "4401": {
+        "city": "guangzhou",
+        "name": "广州市"
+    },
+    "4403": {
+        "city": "shenzhen",
+        "name": "深圳市"
+    },
+    "4406": {
+        "city": "foshan",
+        "name": "佛山市"
+    },
+    "4419": {
+        "city": "dongguan",
+        "name": "东莞市"
+    },
+    "4501": {
+        "city": "nanning",
+        "name": "南宁市"
+    },
+    "5000": {
+        "city": "chongqing",
+        "name": "重庆市"
+    },
+    "5101": {
+        "city": "chengdu",
+        "name": "成都市"
+    },
+    "5201": {
+        "city": "guiyang",
+        "name": "贵阳市"
+    },
+    "5301": {
+        "city": "kunming",
+        "name": "昆明市"
+    },
+    "6101": {
+        "city": "xian",
+        "name": "西安市"
+    },
+    "6201": {
+        "city": "lanzhou",
+        "name": "兰州市"
+    },
+    "6501": {
+        "city": "wulumuqi",
+        "name": "乌鲁木齐市"
+    },
+    "8100": {
+        "city": "xianggang",
+        "name": "香港特别行政区"
+    },
+    "8200": {
+        "city": "aomen",
+        "name": "澳门特别行政区"
+    }
+}
