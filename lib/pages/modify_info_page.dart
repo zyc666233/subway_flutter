@@ -1,33 +1,34 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_pickers/style/default_style.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:subway_flutter/pages/home_page.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
-import 'package:subway_flutter/utils/shared_preferences_utils.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/picker_style.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:path_provider/path_provider.dart';
 
+import '../utils/log_utils.dart';
+import '../utils/navigator_utils.dart';
+import '../utils/shared_preferences_utils.dart';
+import 'home_page.dart';
+import 'pick_cities_page.dart';
 import 'pick_stations_page.dart';
 
-class FirstStartPage extends StatefulWidget {
-  FirstStartPage({Key? key}) : super(key: key);
+class ModifyInfoPage extends StatefulWidget {
+  ModifyInfoPage({Key? key}) : super(key: key);
 
   @override
-  State<FirstStartPage> createState() => _FirstStartPageState();
+  State<ModifyInfoPage> createState() => _ModifyInfoPageState();
 }
 
-class _FirstStartPageState extends State<FirstStartPage> {
+class _ModifyInfoPageState extends State<ModifyInfoPage> {
   // 键盘焦点控制
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _walkHomeFocusNode = FocusNode();
@@ -41,6 +42,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
   // 图片选择器
   final ImagePicker _picker = ImagePicker();
   var _image = null;
+  var _imagePath = null;
   var _headImage = null;
   // 用户选择城市和地铁站
   String _city = '选择所在城市'; // 用户所在城市
@@ -74,20 +76,61 @@ class _FirstStartPageState extends State<FirstStartPage> {
           dismissOnCapturedTaps: true,
           child: Column(
             children: [
-              //欢迎文字
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "欢迎",
-                    style: TextStyle(fontSize: 40),
-                    textAlign: TextAlign.left,
-                  ),
-                  Text(
-                    "感谢您的使用，首次登录可完善资料以体验全部功能",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
+              //取消和确定按钮
+              Container(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        "取消",
+                      ),
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(Size(50, 5)),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6))),
+                        side: MaterialStateProperty.all(
+                            BorderSide(color: Colors.transparent)),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                        // 文本
+                        textStyle:
+                            MaterialStateProperty.all(TextStyle(fontSize: 18)),
+                        // 前景色
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        // 按钮背景色
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => goToHomePage(),
+                      child: Text(
+                        "确定",
+                      ),
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(Size(50, 5)),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6))),
+                        side: MaterialStateProperty.all(
+                            BorderSide(color: Colors.transparent)),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                        // 文本
+                        textStyle:
+                            MaterialStateProperty.all(TextStyle(fontSize: 18)),
+                        // 前景色
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        // 按钮背景色
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               //头像组件
               Container(
@@ -135,38 +178,6 @@ class _FirstStartPageState extends State<FirstStartPage> {
                       contentPadding: EdgeInsets.symmetric(vertical: 10)),
                   focusNode: _nameFocusNode,
                   controller: _nameController,
-                ),
-              ),
-              //跳转按钮
-              TextButton(
-                onPressed: () => goToHomePage(),
-                child: Text(
-                  "开始使用，稍后再填",
-                ),
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-                  // 文本颜色
-                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15)),
-                  // 前景色
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                    (states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        //按下时的颜色
-                        return Colors.grey[800];
-                      }
-                      //默认状态使用白色
-                      return Colors.white;
-                    },
-                  ),
-                  // 按钮背景色
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    //设置按下时的背景颜色
-                    if (states.contains(MaterialState.pressed)) {
-                      return Colors.blue[400];
-                    }
-                    //默认背景颜色
-                    return Colors.blue[200];
-                  }),
                 ),
               ),
               // 填写城市
@@ -428,6 +439,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
     ));
   }
 
+  // 选择车站
   void pickStations(String type) {
     if (_city == '选择所在城市') {
       showDialog(
@@ -511,6 +523,54 @@ class _FirstStartPageState extends State<FirstStartPage> {
         _cities.add(value['name']);
       }
     });
+    // 读取用户已有的信息
+    _imagePath = await SPUtil.getString("avatarImagePath");
+    var userName = await SPUtil.getString("userName");
+    var userCity = await SPUtil.getString("userCity");
+    var userHome = await SPUtil.getString("userHome");
+    var userCompany = await SPUtil.getString("userCompany");
+    var walkHomeTime = await SPUtil.getString("walkHomeTime");
+    var walkCompanyTime = await SPUtil.getString("walkCompanyTime");
+    var addFrequentCities = await SPUtil.getString("addFrequentCities");
+    var addFrequentStations = await SPUtil.getString("addFrequentStations");
+    _addFrequentCities = jsonDecode(addFrequentCities!).cast<String>();
+    _addFrequentStations = jsonDecode(addFrequentStations!).cast<String>();
+    print(_addFrequentCities);
+    print(_addFrequentStations);
+    // 获取本地保存的用户信息
+    if (userName != null) {
+      setState(() {
+        _nameController.text = userName;
+      });
+    }
+    if (userCity != null) {
+      setState(() {
+        _city = userCity;
+      });
+    }
+    if (userHome != null) {
+      setState(() {
+        _home = userHome;
+      });
+    }
+    if (userCompany != null) {
+      setState(() {
+        _company = userCompany;
+      });
+    }
+    if (walkHomeTime != null) {
+      setState(() {
+        _walkHomeController.text = walkHomeTime.split(' ')[0];
+      });
+    }
+    if (walkCompanyTime != null) {
+      setState(() {
+        _walkCompanyController.text = walkCompanyTime.split(' ')[0];
+      });
+    }
+    setState(() {
+      _headImage = FileImage(File(_imagePath));
+    });
   }
 
   // 执行跳转到地图页面的工作
@@ -558,25 +618,29 @@ class _FirstStartPageState extends State<FirstStartPage> {
     SPUtil.save("addFrequentCities", "${jsonEncode(_addFrequentCities)}");
     // 执行页面跳转
     SPUtil.save("firstStart", true);
+    Navigator.of(context).pop();
     NavigatorUtils.pushPageByFade(
         context: context, targPage: HomePage(), isReplace: true);
   }
 
   // 选择所在城市
   void pickCity() {
-    Pickers.showMultiLinkPicker(context,
-        data: _subwayCities,
-        selectData: ['上海市', '上海市'],
-        columeNum: 2,
-        pickerStyle: PickerStyle(pickerHeight: 320),
-        onConfirm: (List p, List<int> position) {
-      setState(() {
-        _city = p[1];
-      });
-      // print('longer >>> 返回数据：${p.join('、')}');
-      // print('longer >>> 返回数据下标：${position.join('、')}');
-      // print('longer >>> 返回数据类型：${p.map((x) => x.runtimeType).toList()}');
-    });
+    NavigatorUtils.pushPage(
+        context: context,
+        targPage: PickCitiesPage(),
+        dismissCallBack: (value) {
+          setState(() {
+            // 若用户所在城市发生改变
+            if (value != null && value != _city) {
+              _city = value;
+              _addFrequentStations = [];
+              _home = "家附近的车站";
+              _company = "家附近的车站";
+              _walkCompanyController.text = '';
+              _walkHomeController.text = '';
+            }
+          });
+        });
   }
 
   // 添加常去城市
@@ -640,8 +704,8 @@ class _FirstStartPageState extends State<FirstStartPage> {
       String cityStationsString =
           await rootBundle.loadString("assets/city_stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
-      if (cityStationsResult.containsKey('上海市')) {
-        _stations = cityStationsResult['上海市'].cast<String>();
+      if (cityStationsResult.containsKey(_city)) {
+        _stations = cityStationsResult[_city].cast<String>();
       }
     }
     await showModalBottomSheet(

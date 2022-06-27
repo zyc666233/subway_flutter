@@ -2,25 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
 
-List<String> stationList = [];
+import '../utils/shared_preferences_utils.dart';
+
+List<String> cities = [];
 List<String> recentList = [];
+List<String> addFrequentCities = [];
 
-class PickStationsPage extends StatefulWidget {
-  final String city;
-  PickStationsPage({Key? key, required this.city}) : super(key: key);
+class PickCitiesPage extends StatefulWidget {
+  PickCitiesPage({Key? key}) : super(key: key);
 
   @override
-  State<PickStationsPage> createState() => _PickStationsPageState(city);
+  State<PickCitiesPage> createState() => _PickCitiesPageState();
 }
 
-class _PickStationsPageState extends State<PickStationsPage> {
-  String _city;
-  _PickStationsPageState(this._city);
-
+class _PickCitiesPageState extends State<PickCitiesPage> {
   @override
   void initState() {
     super.initState();
@@ -30,78 +26,99 @@ class _PickStationsPageState extends State<PickStationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.grey),
-          backgroundColor: Colors.white,
-          title: Container(
-            height: 35,
-            width: MediaQuery.of(context).size.width - 120,
-            decoration: BoxDecoration(
-                color: Color.fromRGBO(230, 230, 230, 1.0),
-                borderRadius: BorderRadius.circular(20)),
-            child: InkWell(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Icon(Icons.search, color: Colors.grey)),
-                  Text(
-                    "点我进行搜索",
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  )
-                ],
-              ),
-              onTap: () async {
-                //这里是跳转搜索界面的关键
-                var station_back = await showSearch(
-                    context: context, delegate: SearchBarDelegate());
-                if (station_back != null) {
-                  Navigator.of(context).pop(station_back);
-                }
-              },
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.grey),
+        backgroundColor: Colors.white,
+        title: Container(
+          height: 35,
+          width: MediaQuery.of(context).size.width - 120,
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(230, 230, 230, 1.0),
+              borderRadius: BorderRadius.circular(20)),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Icon(Icons.search, color: Colors.grey)),
+                Text(
+                  "点我进行搜索",
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                )
+              ],
             ),
+            onTap: () async {
+              //这里是跳转搜索界面的关键
+              var station_back = await showSearch(
+                  context: context, delegate: SearchBarDelegate());
+              if (station_back != null) {
+                Navigator.of(context).pop(station_back);
+              }
+            },
           ),
         ),
-        body: Container(
-          child: ListView.builder(
-              itemCount: stationList.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              width: 0.8, color: Colors.grey.shade400))),
-                  child: ListTile(
-                    style: ListTileStyle.list,
-                    leading: Icon(Icons.subway),
-                    title: Text(
-                      stationList[index],
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop(stationList[index]);
-                    },
+      ),
+      body: ListView.builder(
+          itemCount: addFrequentCities.length + cities.length,
+          itemBuilder: (context, index) {
+            if (index < addFrequentCities.length) {
+              return Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: 0.8, color: Colors.grey.shade400))),
+                child: ListTile(
+                  style: ListTileStyle.list,
+                  leading: Icon(Icons.star, color: Colors.grey[800],),
+                  title: Text(
+                    addFrequentCities[index],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                );
-              }),
-        ));
+                  onTap: () {
+                    Navigator.of(context).pop(addFrequentCities[index]);
+                  },
+                ),
+              );
+            } else {
+              return Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: 0.8, color: Colors.grey.shade400))),
+                child: ListTile(
+                  style: ListTileStyle.list,
+                  leading: Icon(Icons.location_on),
+                  title: Text(
+                    cities[index - addFrequentCities.length],
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pop(cities[index - addFrequentCities.length]);
+                  },
+                ),
+              );
+            }
+          }),
+    );
   }
 
   void initialization() async {
-    print(_city);
-    stationList = [];
-    if (_city != '选择所在城市') {
-      // 读取已开通地铁的城市列表
-      String cityStationsString =
-          await rootBundle.loadString("assets/city_stations.json");
-      Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
-      if (cityStationsResult.containsKey(_city)) {
-        stationList = cityStationsResult[_city].cast<String>();
+    cities = [];
+    String subwayCitysString =
+        await rootBundle.loadString("assets/subway_citys.json");
+    Map<String, dynamic> subwayCitysResult = jsonDecode(subwayCitysString);
+    subwayCitysResult.forEach((key, value) {
+      if (!cities.contains(value['name'])) {
+        cities.add(value['name']);
       }
-    }
+    });
+    var _addFrequentCities = await SPUtil.getString("addFrequentCities");
+    addFrequentCities = jsonDecode(_addFrequentCities!).cast<String>();
     setState(() {
-      print(stationList.length);
+      print(cities.length);
+      print(addFrequentCities);
     });
   }
 }
@@ -136,7 +153,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     bool flag = false;
-    if (stationList.contains(query)) {
+    if (cities.contains(query)) {
       flag = true;
     }
     return flag == true
@@ -182,7 +199,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     //判断集合中的字符串是否以搜索框内输入的字符串开头，是则返回true，并将结果以list的方式储存在suggestionsList里
     final suggestionsList = query.isEmpty
         ? recentList
-        : stationList.where((input) => input.startsWith(query)).toList();
+        : cities.where((input) => input.startsWith(query)).toList();
 
     return ListView.builder(
         itemCount: suggestionsList.length,

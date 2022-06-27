@@ -5,6 +5,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:subway_flutter/pages/modify_info_page.dart';
+import 'package:subway_flutter/utils/log_utils.dart';
+import 'package:subway_flutter/utils/navigator_utils.dart';
 import 'package:subway_flutter/utils/search_bar_wigdet.dart';
 import 'package:subway_flutter/utils/shared_preferences_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -74,6 +77,43 @@ class HomePageState extends State<HomePage> {
                 _userName,
                 style: TextStyle(fontSize: 16),
               ),
+              //配置其他
+              otherAccountsPictures: <Widget>[
+                Container(
+                  padding:
+                      EdgeInsets.only(left: 1, right: 1, top: 9, bottom: 9),
+                  child: TextButton(
+                      style: ButtonStyle(
+                        //圆角
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6))),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.grey[100]),
+                        // minimumSize: MaterialStateProperty.all(Size(1, 2)),
+                        padding: MaterialStateProperty.all(EdgeInsets.only(
+                            left: 2, right: 2, top: 1, bottom: 1)),
+                        textStyle:
+                            MaterialStateProperty.all(TextStyle(fontSize: 12)),
+                        // side: MaterialStateProperty.all(
+                        //     BorderSide(color: Colors.white)),
+                      ),
+                      onPressed: () => modifyInfo(),
+                      child: Text("编辑",
+                          style: TextStyle(
+                            color: Colors.blue[600],
+                          ))),
+                ),
+                // Container(
+                //   padding: EdgeInsets.all(5),
+                //   child: Container(
+                //       alignment: Alignment.center,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(color: Colors.white),
+                //           borderRadius: BorderRadius.all(Radius.circular(5))),
+                //       child: Text("编辑",
+                //           style: TextStyle(color: Colors.white, fontSize: 12))),
+                // )
+              ],
             ),
             Container(
               padding: EdgeInsets.only(bottom: 5),
@@ -143,7 +183,8 @@ class HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
-                                      width: 0.8, color: Colors.grey.shade400))),
+                                      width: 0.8,
+                                      color: Colors.grey.shade400))),
                           child: ListTile(
                             style: ListTileStyle.list,
                             leading: Icon(Icons.subway),
@@ -311,9 +352,11 @@ class HomePageState extends State<HomePage> {
         _walkCompanyTime = walkCompanyTime;
       });
     }
-    setState(() {
-      _headImage = FileImage(File(_imagePath));
-    });
+    if (_imagePath != null) {
+      setState(() {
+        _headImage = FileImage(File(_imagePath));
+      });
+    }
 
     // if (Platform.isAndroid) {
     //   WebView.platform = SurfaceAndroidWebView();
@@ -326,5 +369,9 @@ class HomePageState extends State<HomePage> {
     // print('ready in 3...');
     // await Future.delayed(const Duration(seconds: 1));
     // FlutterNativeSplash.remove();
+  }
+
+  void modifyInfo() {
+    NavigatorUtils.pushPageByFade(context: context, targPage: ModifyInfoPage());
   }
 }
