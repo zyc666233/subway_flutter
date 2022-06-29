@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:subway_flutter/pages/modify_info_page.dart';
+import 'package:subway_flutter/pages/pick_stations_page.dart';
 import 'package:subway_flutter/utils/log_utils.dart';
 import 'package:subway_flutter/utils/navigator_utils.dart';
 import 'package:subway_flutter/utils/search_bar_wigdet.dart';
@@ -203,10 +204,68 @@ class HomePageState extends State<HomePage> {
             )
           ]),
         ),
-        body: Stack(
+        // 页面主体
+        body: Column(
           children: [
-            //第一层，地铁图
-            Positioned.fill(
+            // 搜索栏
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: Color.fromARGB(255, 245, 245, 245),
+                    width: 0.0), //灰色的一层边框
+                color: Color.fromARGB(255, 240, 240, 240),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              padding: const EdgeInsets.fromLTRB(10, 40, 20, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.person),
+                      iconSize: 40,
+                      onPressed: () {
+                        if (!_scaffoldkey.currentState!.isDrawerOpen) {
+                          _scaffoldkey.currentState?.openDrawer();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 15),
+                  Expanded(
+                    flex: 9,
+                    child: Column(
+                      children: [
+                        SearchBar(
+                          // textController: TextEditingController(),
+                          hintText: "出发站点",
+                          // onSubmitted: (value) {
+                          //   print("$value");
+                          // },
+                          // onChanged: (value) {
+                          //   print("$value");
+                          // },
+                        ),
+                        SearchBar(
+                          // textController: TextEditingController(),
+                          hintText: "到达站点",
+                          // onSubmitted: (value) {
+                          //   print("$value");
+                          // },
+                          // onChanged: (value) {
+                          //   print("$value");
+                          // },
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            // 地铁图
+            Expanded(
                 child: WebView(
               initialUrl: "http://0.0.0.0:9998/files/html/subway_map_test.html",
               javascriptMode: JavascriptMode.unrestricted,
@@ -220,69 +279,6 @@ class HomePageState extends State<HomePage> {
                 // _webViewController?.runJavascript(jsContent);
               },
             )),
-
-            //第二层，搜索栏
-            Positioned(
-              left: 5,
-              right: 5,
-              top: 40,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromARGB(255, 245, 245, 245),
-                      width: 0.0), //灰色的一层边框
-                  color: Color.fromARGB(255, 240, 240, 240),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: IconButton(
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(Icons.person),
-                        iconSize: 40,
-                        onPressed: () {
-                          if (!_scaffoldkey.currentState!.isDrawerOpen) {
-                            _scaffoldkey.currentState?.openDrawer();
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      flex: 9,
-                      child: Column(
-                        children: [
-                          SearchBar(
-                            textController: TextEditingController(),
-                            hintText: "出发站点",
-                            onSubmitted: (value) {
-                              print("$value");
-                            },
-                            onChanged: (value) {
-                              print("$value");
-                            },
-                          ),
-                          SearchBar(
-                            textController: TextEditingController(),
-                            hintText: "到达站点",
-                            onSubmitted: (value) {
-                              print("$value");
-                            },
-                            onChanged: (value) {
-                              print("$value");
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
           ],
         ),
         floatingActionButton: FloatingActionButton(
