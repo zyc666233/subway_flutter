@@ -139,7 +139,26 @@ class _FirstStartPageState extends State<FirstStartPage> {
               ),
               //跳转按钮
               TextButton(
-                onPressed: () => goToHomePage(),
+                onPressed: () {
+                  if (_city == "选择所在城市" || _city == '') {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text('提示'),
+                              content: Text(('请先选择所在城市！')),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("确定"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ));
+                  } else {
+                    goToHomePage();
+                  }
+                },
                 child: Text(
                   "开始使用，稍后再填",
                 ),
@@ -451,7 +470,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
             city: _city,
           ),
           dismissCallBack: (value) {
-            if (value != null) {
+            if (value != null && value != '') {
               if (type == 'home') {
                 setState(() {
                   _home = value;

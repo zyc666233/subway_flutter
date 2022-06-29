@@ -463,7 +463,7 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
             city: _city,
           ),
           dismissCallBack: (value) {
-            if (value != null) {
+            if (value != null && value != '') {
               if (type == 'home') {
                 setState(() {
                   _home = value;
@@ -631,7 +631,7 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
         dismissCallBack: (value) {
           setState(() {
             // 若用户所在城市发生改变
-            if (value != null && value != _city) {
+            if (value != null && value != _city && value != '') {
               _city = value;
               _addFrequentStations = [];
               _home = "家附近的车站";

@@ -124,6 +124,9 @@ class _PickCitiesPageState extends State<PickCitiesPage> {
 }
 
 class SearchBarDelegate extends SearchDelegate<String> {
+
+  String get searchFieldLabel => "搜索城市";
+
   // 搜索条右侧的按钮执行方法，在这里方法里放入一个clear图标，点击图标清空搜索的内容。
   @override
   List<Widget>? buildActions(BuildContext context) {

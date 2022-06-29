@@ -34,11 +34,11 @@
                 //     var json_data = JSON.stringify(citys);
                 //     console.log(json_data);
                 // });
-                mySubway.getLineList(function (lines) {
-                    console.log(lines);
-                    var json_data = JSON.stringify(lines);
-                    console.log(json_data);
-                });
+                // mySubway.getLineList(function (lines) {
+                //     console.log(lines);
+                //     var json_data = JSON.stringify(lines);
+                //     console.log(json_data);
+                // });
                 document.getElementById('select_bg').onclick = function () {
                     if (startInfo.id && endInfo.id) {
                         mySubway.clearMarker(startInfo.id)
@@ -114,7 +114,7 @@
             function route() {
                 if (startInfo.id && endInfo.id) {
                     mySubway.route(startInfo.id, endInfo.id, {
-                        closeBtn: false
+                        closeBtn: true
                     });
                     console.log(startInfo.id);
                     console.log(endInfo.id);
