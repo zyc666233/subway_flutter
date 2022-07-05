@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:subway_flutter/utils/log_utils.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'shared_preferences_utils.dart';
 
@@ -18,6 +20,8 @@ class SearchBar extends StatefulWidget {
   // final onChanged; //输入监听
   // final onSubmitted; //键盘回车监听
   final String hintText; //提示文本
+  final webViewController;
+  final ValueSetter<String> stationCallBack;
   // final TextInputType textInputType; //设置键盘弹出时类型
 
   SearchBar({
@@ -25,25 +29,35 @@ class SearchBar extends StatefulWidget {
     // this.textController,
     // this.onChanged,
     this.hintText = '请输入内容',
+    this.webViewController,
+    required this.stationCallBack,
     // this.textInputType = TextInputType.text,
     // this.onSubmitted
   }) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState(this.hintText);
+  State<SearchBar> createState() =>
+      _SearchBarState(this.hintText, this.webViewController, this.stationCallBack);
 }
 
 class _SearchBarState extends State<SearchBar> {
   // TextEditingController? textController; //内容
   // var onChanged; //输入监听
   // var onSubmitted; //键盘回车监听
-  var hintText; //提示文本
+  var hintText; // 提示文本
+  var webViewController; // html页面控制器
+  late String showText; // 搜索栏显示文本
+  late WebViewController _webViewController;
+  late ValueSetter<String> stationCallBack;
+
   // late TextInputType textInputType; //设置键盘弹出时类型
 
   _SearchBarState(
     // this.textController,
     // this.onChanged,
     this.hintText,
+    this.webViewController,
+    this.stationCallBack,
     // this.textInputType = TextInputType.text,
     // this.onSubmitted
   );
@@ -67,40 +81,56 @@ class _SearchBarState extends State<SearchBar> {
       height: 40,
       // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
       padding: EdgeInsets.only(left: 6, right: 6),
-      child: InkWell(
-        child: Row(
-          children: [
-            Expanded(
-                flex: 1,
-                child: Icon(
-                  Icons.search,
-                  color: Colors.blue,
-                )),
-            Expanded(
-                flex: 6,
+      child: Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Icon(
+                Icons.search,
+                color: Colors.blue,
+              )),
+          Expanded(
+              flex: 6,
+              child: InkWell(
                 child: Text(
-                  hintText,
+                  showText,
                   style: TextStyle(fontSize: 16),
-                )),
-            Expanded(flex: 1, child: Icon(Icons.close))
-          ],
-        ),
-        onTap: () async {
-          //这里是跳转搜索界面的关键
-          var station_back =
-              await showSearch(context: context, delegate: SearchBarDelegate());
-          print(station_back);
-          if (station_back != null && station_back != '') {
-            setState(() {
-              hintText = station_back;
-            });
-          }
-        },
+                ),
+                onTap: () async {
+                  //这里是跳转搜索界面的关键
+                  var station_back = await showSearch(
+                      context: context, delegate: SearchBarDelegate());
+                  print(station_back);
+                  if (station_back != null && station_back != '') {
+                    setState(() {
+                      showText = station_back;
+                    });
+                    stationCallBack(showText);
+                    // showStationOnMap(showText);
+                  }
+                },
+              )),
+          Expanded(
+              flex: 1,
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    showText = hintText;
+                  });
+                },
+              ))
+        ],
       ),
     );
   }
 
   void initialization() async {
+    showText = hintText;
+    LogUtils.e("msyyds${webViewController.runtimeType.toString()}");
+    if (webViewController.runtimeType == WebViewController) {
+      _webViewController = webViewController;
+    }
     stationList = [];
     var _userCity = await SPUtil.getString("userCity");
     if (_userCity != null) {
@@ -130,6 +160,18 @@ class _SearchBarState extends State<SearchBar> {
     print(userHome);
     print(userCompany);
     print(addFrequentStations);
+  }
+
+  void showStationOnMap(String station_name) {
+    _webViewController
+        .runJavascriptReturningResult("searchStation('$station_name')")
+        .then((value) {
+      var station_info = jsonDecode(value);
+      station_info = jsonDecode(station_info);
+      print(station_info["stationList"][0]["id"]);
+      var station_id = station_info["stationList"][0]["id"];
+      _webViewController.runJavascript("touchStation($station_id)");
+    });
   }
 }
 
