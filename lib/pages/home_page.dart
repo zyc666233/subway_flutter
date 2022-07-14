@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:subway_flutter/pages/modify_info_page.dart';
 import 'package:subway_flutter/pages/pick_stations_page.dart';
 import 'package:subway_flutter/utils/log_utils.dart';
@@ -14,6 +15,8 @@ import 'package:subway_flutter/utils/shared_preferences_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_flutter_asset/jaguar_flutter_asset.dart';
+
+import 'route_result_page.dart';
 
 String _userName = "";
 String _userCity = "";
@@ -26,6 +29,7 @@ String _reachStation = "到达站点";
 List<String> _addFrequentStations = [];
 List<String> _addFrequentCities = [];
 List<String> stationList = [];
+Map<String, dynamic> routeResult = {};
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -175,8 +179,11 @@ class HomePageState extends State<HomePage> {
                               _addFrequentStations[index],
                               style: TextStyle(fontSize: 18),
                             ),
-                            onTap: () =>
-                                showStationOnMap(_addFrequentStations[index]),
+                            onTap: () {
+                              if (_departureStation == "出发站点" || _reachStation == "到达站点"){
+                                showStationOnMap(_addFrequentStations[index]);
+                              }
+                            },
                           ),
                         );
                       }),
@@ -269,7 +276,8 @@ class HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _departureStation = "出发站点";
-                                        _webViewController?.runJavascript("clearStart()");
+                                        _webViewController
+                                            ?.runJavascript("clearStart()");
                                       });
                                     },
                                   ))
@@ -325,7 +333,8 @@ class HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _reachStation = "到达站点";
-                                        _webViewController?.runJavascript("clearEnd()");
+                                        _webViewController
+                                            ?.runJavascript("clearEnd()");
                                       });
                                     },
                                   ))
@@ -387,6 +396,17 @@ class HomePageState extends State<HomePage> {
                         });
                       }
                     }),
+                JavascriptChannel(
+                    name: "routeCompletedCallFlutter",
+                    onMessageReceived: (msg) async {
+                      // LogUtils.e(msg.message);
+                      routeResult = jsonDecode(msg.message);
+                      Directory tempDir = await getTemporaryDirectory();
+                      String tempPath = tempDir.path;
+                      File route_result = File("$tempPath/route_result.txt");
+                      route_result.writeAsStringSync(msg.message);
+                      showRouteResult(routeResult);
+                    }),
               },
               onWebViewCreated: (WebViewController webViewController) {
                 _webViewController = webViewController;
@@ -400,10 +420,14 @@ class HomePageState extends State<HomePage> {
             )),
           ],
         ),
+        // 悬浮按钮用于查看搜索结果
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
-          onPressed: null,
-          tooltip: '乘车码',
+          onPressed: (){
+            if(_departureStation != "出发站点" && _reachStation != "到达站点" && routeResult != {}){
+              showRouteResult(routeResult);
+            }
+          },
         ),
       ),
     );
@@ -516,6 +540,7 @@ class HomePageState extends State<HomePage> {
       var station_id = station_info["stationList"][0]["id"];
       _webViewController?.runJavascript("setStartStation('$station_id')");
     });
+    // _webViewController?.runJavascript("deleteMysubway()");
     // _webViewController?.runJavascript("createMap('南京市')");
   }
 
@@ -529,6 +554,328 @@ class HomePageState extends State<HomePage> {
       var station_id = station_info["stationList"][0]["id"];
       _webViewController?.runJavascript("setEndStation('$station_id')");
     });
+  }
+
+  void showRouteResult(Map<String, dynamic> routeResult) async {
+    return showModalBottomSheet<void>(
+      context: context,
+      //自定义底部弹窗布局
+      shape: new RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 2.0,
+          child: Column(
+            children: [
+              // 弹窗标题栏
+              Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: 0.8, color: Colors.grey.shade400))),
+                child: ListTile(
+                  title: Text(
+                    "查询结果",
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  trailing: IconButton(
+                    padding: EdgeInsets.only(bottom: 1),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 40,
+                  ),
+                  leading: IconButton(
+                    onPressed: null,
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.transparent,
+                    ),
+                    iconSize: 35,
+                  ),
+                ),
+              ),
+              // 起点站和终点站的提示信息栏
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                margin: EdgeInsets.only(bottom: 20, top: 15),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "从 $_departureStation 至 $_reachStation",
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+              // 最便宜策略结果展示栏
+              Container(
+                margin: EdgeInsets.only(bottom: 15),
+                child: ListTile(
+                  horizontalTitleGap: 0,
+                  leading: Container(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Image(
+                          image:
+                              AssetImage("assets/images/green_triangle.png"))),
+                  title: Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  radius: 15,
+                                  child: Text(
+                                    "3",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("4"), Text("元")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("10"), Text("站")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("1"), Text("换")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("33"), Text("分")])),
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
+                  trailing: IconButton(
+                      iconSize: 35,
+                      onPressed: () => goToRouteResultPage(routeResult),
+                      icon: Icon(Icons.navigate_next)),
+                ),
+              ),
+              // 最快速策略结果展示栏
+              Container(
+                margin: EdgeInsets.only(bottom: 15),
+                child: ListTile(
+                  horizontalTitleGap: 0,
+                  leading: Container(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Image(
+                          image:
+                              AssetImage("assets/images/blue_triangle.png"))),
+                  title: Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.blue,
+                                  radius: 15,
+                                  child: Text(
+                                    "1",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    size: 15,
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  radius: 15,
+                                  child: Text(
+                                    "3",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("4"), Text("元")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("11"), Text("站")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("1"), Text("换")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("48"), Text("分")])),
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
+                  trailing: IconButton(
+                      iconSize: 35,
+                      onPressed: () => goToRouteResultPage(routeResult),
+                      icon: Icon(Icons.navigate_next)),
+                ),
+              ),
+              // 最舒适策略结果展示栏
+              Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: 0.8, color: Colors.grey.shade400))),
+                margin: EdgeInsets.only(bottom: 15),
+                child: ListTile(
+                  horizontalTitleGap: 0,
+                  leading: Container(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Image(
+                          image: AssetImage("assets/images/red_triangle.png"))),
+                  title: Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  radius: 15,
+                                  child: Text(
+                                    "2",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    size: 15,
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: Colors.green,
+                                  radius: 15,
+                                  child: Text(
+                                    "3",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("3"), Text("元")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("8"), Text("站")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("0"), Text("换")])),
+                                Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                        children: [Text("53"), Text("分")])),
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
+                  trailing: IconButton(
+                      iconSize: 35,
+                      onPressed: () => goToRouteResultPage(routeResult),
+                      icon: Icon(Icons.navigate_next)),
+                ),
+              ),
+              // 颜色与对应策略的提示信息
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Row(
+                  children: [
+                    Container(
+                        height: 40,
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Image(
+                            image: AssetImage(
+                                "assets/images/green_triangle.png"))),
+                    Container(
+                      child: Text("最便宜"),
+                      margin: EdgeInsets.only(right: 30),
+                      padding: EdgeInsets.only(bottom: 20),
+                    ),
+                    Container(
+                        height: 40,
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Image(
+                            image:
+                                AssetImage("assets/images/blue_triangle.png"))),
+                    Container(
+                      child: Text("最快速"),
+                      margin: EdgeInsets.only(right: 30),
+                      padding: EdgeInsets.only(bottom: 20),
+                    ),
+                    Container(
+                        height: 40,
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Image(
+                            image:
+                                AssetImage("assets/images/red_triangle.png"))),
+                    Container(
+                      child: Text("最舒适"),
+                      margin: EdgeInsets.only(right: 30),
+                      padding: EdgeInsets.only(bottom: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void goToRouteResultPage(Map<String, dynamic> routeResult) {
+    NavigatorUtils.pushPageByFade(context: context, targPage: RouteResultPage(routeResult));
   }
 }
 

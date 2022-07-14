@@ -645,14 +645,14 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
 
   // 添加常去城市
   void _showMultiSelectCities() async {
-    await showModalBottomSheet(
-      isScrollControlled: true,
+    await showDialog(
+      // isScrollControlled: true,
       context: context,
       builder: (ctx) {
-        return MultiSelectBottomSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.8,
-          minChildSize: 0.2,
+        return MultiSelectDialog(
+          // initialChildSize: 0.6,
+          // maxChildSize: 0.8,
+          // minChildSize: 0.2,
           items: _cities.map((e) => MultiSelectItem(e, e)).toList(),
           initialValue: _addFrequentCities,
           onConfirm: (values) {
@@ -708,14 +708,14 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
         _stations = cityStationsResult[_city].cast<String>();
       }
     }
-    await showModalBottomSheet(
-      isScrollControlled: true,
+    await showDialog(
+      // isScrollControlled: true,
       context: context,
       builder: (ctx) {
-        return MultiSelectBottomSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.8,
-          minChildSize: 0.2,
+        return MultiSelectDialog(
+          // initialChildSize: 0.6,
+          // maxChildSize: 0.8,
+          // minChildSize: 0.2,
           items: _stations.map((e) => MultiSelectItem(e, e)).toList(),
           initialValue: _addFrequentStations,
           onConfirm: (values) {

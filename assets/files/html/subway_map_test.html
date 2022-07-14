@@ -33,7 +33,7 @@
                 }
             });
 
-            //地铁加载完成，执行complete事件
+            // 地铁加载完成，执行complete事件
             mySubway.event.on("subway.complete", function (ev, info) {
                 var id = info.id;
                 // mySubway.getCityList(function (citys){
@@ -57,20 +57,20 @@
                 }
             });
 
-            //地铁图缩放
+            // 地铁图缩放
             mySubway.event.on("subway.move", function (ev, info) {
                 var id = info.id;
                 // console.log(info);
             });
 
-            //点击站点，显示此站点的信息窗体
+            // 点击站点，显示此站点的信息窗体
             mySubway.event.on("station.touch", function (ev, info) {
                 // console.log(info)
                 var id = info.id;
                 touchStation(id)
             });
 
-            //点击线路名，高亮此线路
+            // 点击线路名，高亮此线路
             mySubway.event.on("lineName.touch", function (ev, info) {
                 // console.log(info)
                 mySubway.showLine(info.id);
@@ -80,7 +80,7 @@
                 mySubway.setCenter(center);
             });
 
-            //点击空白处
+            // 点击空白处
             mySubway.event.on("subway.touch", function () {
                 mySubway.clearInfoWindow();
                 mySubway.clearLine();
@@ -89,7 +89,7 @@
                 touchMapCallFlutter.postMessage("true")
             });
 
-            //设置起点
+            // 设置起点
             mySubway.event.on("startStation.touch", function (ev, info) {
                 setStartStation(info.id)
                 var json_data = JSON.stringify(info);
@@ -97,7 +97,7 @@
                 stationBackCallFlutter.postMessage(json_data);
             });
 
-            //设置终点
+            // 设置终点
             mySubway.event.on("endStation.touch", function (ev, info) {
                 setEndStation(info.id)
                 var json_data = JSON.stringify(info);
@@ -107,6 +107,15 @@
 
             startInfo = {};
             endInfo = {};
+
+            // 路径规划完毕后触发此事件
+            mySubway.event.on("subway.routeComplete", function (ev, info) {
+                // var json_data = JSON.stringify(ev);
+                // console.log(json_data);
+                var json_data = JSON.stringify(info);
+                // console.log(json_data);
+                routeCompletedCallFlutter.postMessage(json_data)
+            });
         }
 
         // 根据id显示站点的信息窗体
@@ -189,6 +198,12 @@
                 station_list = json_data
             })
             return station_list
+        }
+
+        // 销毁mysubway对象
+        function deleteMysubway(){
+            mySubway = null
+            delete(mySubway);
         }
 
     </script>
