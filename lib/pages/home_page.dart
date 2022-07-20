@@ -26,6 +26,10 @@ String _walkHomeTime = "";
 String _walkCompanyTime = "";
 String _departureStation = "出发站点";
 String _reachStation = "到达站点";
+Color? greyTextColor = Colors.grey[500];
+Color? blackTextColor = Colors.black;
+Color? textColorStart = greyTextColor;
+Color? textColorEnd = greyTextColor;
 List<String> _addFrequentStations = [];
 List<String> _addFrequentCities = [];
 List<String> stationList = [];
@@ -180,7 +184,8 @@ class HomePageState extends State<HomePage> {
                               style: TextStyle(fontSize: 18),
                             ),
                             onTap: () {
-                              if (_departureStation == "出发站点" || _reachStation == "到达站点"){
+                              if (_departureStation == "出发站点" ||
+                                  _reachStation == "到达站点") {
                                 showStationOnMap(_addFrequentStations[index]);
                               }
                             },
@@ -251,7 +256,7 @@ class HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     child: Text(
                                       _departureStation,
-                                      style: TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16, color: textColorStart),
                                     ),
                                     onTap: () async {
                                       //这里是跳转搜索界面的关键
@@ -263,6 +268,7 @@ class HomePageState extends State<HomePage> {
                                           station_back != '') {
                                         setState(() {
                                           _departureStation = station_back;
+                                          textColorStart = blackTextColor;
                                           setStartStationOnMap(
                                               _departureStation);
                                         });
@@ -276,6 +282,7 @@ class HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _departureStation = "出发站点";
+                                        textColorStart = greyTextColor;
                                         _webViewController
                                             ?.runJavascript("clearStart()");
                                       });
@@ -309,7 +316,7 @@ class HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     child: Text(
                                       _reachStation,
-                                      style: TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16, color: textColorEnd),
                                     ),
                                     onTap: () async {
                                       //这里是跳转搜索界面的关键
@@ -321,6 +328,7 @@ class HomePageState extends State<HomePage> {
                                           station_back != '') {
                                         setState(() {
                                           _reachStation = station_back;
+                                          textColorEnd = blackTextColor;
                                           setEndStationOnMap(_reachStation);
                                         });
                                       }
@@ -333,6 +341,7 @@ class HomePageState extends State<HomePage> {
                                     onPressed: () {
                                       setState(() {
                                         _reachStation = "到达站点";
+                                        textColorEnd = greyTextColor;
                                         _webViewController
                                             ?.runJavascript("clearEnd()");
                                       });
@@ -377,11 +386,13 @@ class HomePageState extends State<HomePage> {
                       if (stationInfo["type"] == "start") {
                         setState(() {
                           _departureStation = stationInfo["name"];
+                          textColorStart = blackTextColor;
                         });
                       }
                       if (stationInfo["type"] == "end") {
                         setState(() {
                           _reachStation = stationInfo["name"];
+                          textColorEnd = blackTextColor;
                         });
                       }
                     }),
@@ -391,6 +402,7 @@ class HomePageState extends State<HomePage> {
                       print(msg.message);
                       if (msg.message == "true") {
                         setState(() {
+                          textColorStart = textColorEnd = greyTextColor;
                           _departureStation = "出发站点";
                           _reachStation = "到达站点";
                         });
@@ -405,7 +417,9 @@ class HomePageState extends State<HomePage> {
                       String tempPath = tempDir.path;
                       File route_result = File("$tempPath/route_result.txt");
                       route_result.writeAsStringSync(msg.message);
-                      showRouteResult(routeResult);
+                      if (routeResult["info"] == "success") {
+                        showRouteResult(routeResult);
+                      }
                     }),
               },
               onWebViewCreated: (WebViewController webViewController) {
@@ -423,8 +437,10 @@ class HomePageState extends State<HomePage> {
         // 悬浮按钮用于查看搜索结果
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
-          onPressed: (){
-            if(_departureStation != "出发站点" && _reachStation != "到达站点" && routeResult != {}){
+          onPressed: () {
+            if (_departureStation != "出发站点" &&
+                _reachStation != "到达站点" &&
+                routeResult != {}) {
               showRouteResult(routeResult);
             }
           },
@@ -557,6 +573,29 @@ class HomePageState extends State<HomePage> {
   }
 
   void showRouteResult(Map<String, dynamic> routeResult) async {
+    routeResult = routeResult["data"];
+    Map<String, dynamic> buslist = routeResult["buslist"][0];
+    List<dynamic> segmentlist = buslist["segmentlist"];
+    String expensetime = buslist["expensetime"]; // 全程花费的时间
+    int transitTimes = segmentlist.length - 1; // 中转次数
+    int totalStations = 0; // 全程经过的站点总数
+    String expense = buslist["expense"]; // 全程票价
+    if (expense.endsWith(".0")){
+      expense = expense.substring(0, expense.length - 2);
+    }
+    LogUtils.e(expense);
+    LogUtils.e((int.parse(expensetime) / 60).toString());
+    LogUtils.e(transitTimes.toString());
+    for (var i = 0; i < segmentlist.length; i++) {
+      LogUtils.e(
+          segmentlist[i]["bus_key_name"].toString().split("号")[0].substring(2));
+      LogUtils.e((int.parse(segmentlist[i]["passdepotcount"].toString()) + 1)
+          .toString());
+      totalStations +=
+          int.parse(segmentlist[i]["passdepotcount"].toString()) + 1;
+    }
+    LogUtils.e(totalStations.toString());
+
     return showModalBottomSheet<void>(
       context: context,
       //自定义底部弹窗布局
@@ -622,24 +661,51 @@ class HomePageState extends State<HomePage> {
                               AssetImage("assets/images/green_triangle.png"))),
                   title: Row(
                     children: [
+                      // 乘坐的地铁线路
                       Expanded(
-                          flex: 1,
+                          flex: 11,
                           child: Container(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.green,
+                            height: 40,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: segmentlist.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String lineID = segmentlist[index]
+                                        ["bus_key_name"]
+                                    .toString()
+                                    .split("号")[0]
+                                    .substring(2);
+                                String hexColorString =
+                                    segmentlist[index]["color"].toString();
+                                if (hexColorString.length == 6) {
+                                  hexColorString = "0xFF" + hexColorString;
+                                }
+                                return CircleAvatar(
+                                  backgroundColor:
+                                      Color(int.parse(hexColorString)),
                                   radius: 15,
                                   child: Text(
-                                    "3",
+                                    lineID,
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                              ],
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Container(
+                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    size: 15,
+                                  ),
+                                );
+                              },
                             ),
                           )),
+                      // 全部行程的汇总信息
                       Expanded(
-                          flex: 1,
+                          flex: 10,
                           child: Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -647,19 +713,26 @@ class HomePageState extends State<HomePage> {
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
                                     child: Column(
-                                        children: [Text("4"), Text("元")])),
+                                        children: [Text(expense), Text("元")])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("10"), Text("站")])),
+                                    child: Column(children: [
+                                      Text(totalStations.toString()),
+                                      Text("站")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("1"), Text("换")])),
+                                    child: Column(children: [
+                                      Text(transitTimes.toString()),
+                                      Text("换")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("33"), Text("分")])),
+                                    child: Column(children: [
+                                      Text((int.parse(expensetime) ~/ 60 + 1)
+                                          .toString()),
+                                      Text("分")
+                                    ])),
                               ],
                             ),
                           ))
@@ -667,7 +740,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult),
+                      onPressed: () => goToRouteResultPage(routeResult, "最便宜"),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -683,39 +756,51 @@ class HomePageState extends State<HomePage> {
                               AssetImage("assets/images/blue_triangle.png"))),
                   title: Row(
                     children: [
+                      // 乘坐的地铁线路
                       Expanded(
-                          flex: 1,
+                          flex: 11,
                           child: Container(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.blue,
+                            height: 40,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: segmentlist.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String lineID = segmentlist[index]
+                                        ["bus_key_name"]
+                                    .toString()
+                                    .split("号")[0]
+                                    .substring(2);
+                                String hexColorString =
+                                    segmentlist[index]["color"].toString();
+                                if (hexColorString.length == 6) {
+                                  hexColorString = "0xFF" + hexColorString;
+                                }
+                                return CircleAvatar(
+                                  backgroundColor:
+                                      Color(int.parse(hexColorString)),
                                   radius: 15,
                                   child: Text(
-                                    "1",
+                                    lineID,
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                                Container(
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Container(
                                   margin: EdgeInsets.only(left: 5, right: 5),
                                   child: Icon(
                                     Icons.arrow_forward,
                                     size: 15,
                                   ),
-                                ),
-                                CircleAvatar(
-                                  backgroundColor: Colors.green,
-                                  radius: 15,
-                                  child: Text(
-                                    "3",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           )),
+                      // 全部行程的汇总信息
                       Expanded(
-                          flex: 1,
+                          flex: 10,
                           child: Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -723,19 +808,26 @@ class HomePageState extends State<HomePage> {
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
                                     child: Column(
-                                        children: [Text("4"), Text("元")])),
+                                        children: [Text(expense), Text("元")])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("11"), Text("站")])),
+                                    child: Column(children: [
+                                      Text(totalStations.toString()),
+                                      Text("站")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("1"), Text("换")])),
+                                    child: Column(children: [
+                                      Text(transitTimes.toString()),
+                                      Text("换")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("48"), Text("分")])),
+                                    child: Column(children: [
+                                      Text((int.parse(expensetime) ~/ 60 + 1)
+                                          .toString()),
+                                      Text("分")
+                                    ])),
                               ],
                             ),
                           ))
@@ -743,7 +835,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult),
+                      onPressed: () => goToRouteResultPage(routeResult, "最快速"),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -762,39 +854,51 @@ class HomePageState extends State<HomePage> {
                           image: AssetImage("assets/images/red_triangle.png"))),
                   title: Row(
                     children: [
+                      // 乘坐的地铁线路
                       Expanded(
-                          flex: 1,
+                          flex: 11,
                           child: Container(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.red,
+                            height: 40,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: segmentlist.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String lineID = segmentlist[index]
+                                        ["bus_key_name"]
+                                    .toString()
+                                    .split("号")[0]
+                                    .substring(2);
+                                String hexColorString =
+                                    segmentlist[index]["color"].toString();
+                                if (hexColorString.length == 6) {
+                                  hexColorString = "0xFF" + hexColorString;
+                                }
+                                return CircleAvatar(
+                                  backgroundColor:
+                                      Color(int.parse(hexColorString)),
                                   radius: 15,
                                   child: Text(
-                                    "2",
+                                    lineID,
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                                Container(
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Container(
                                   margin: EdgeInsets.only(left: 5, right: 5),
                                   child: Icon(
                                     Icons.arrow_forward,
                                     size: 15,
                                   ),
-                                ),
-                                CircleAvatar(
-                                  backgroundColor: Colors.green,
-                                  radius: 15,
-                                  child: Text(
-                                    "3",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           )),
+                      // 全部行程的汇总信息
                       Expanded(
-                          flex: 1,
+                          flex: 10,
                           child: Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -802,19 +906,26 @@ class HomePageState extends State<HomePage> {
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
                                     child: Column(
-                                        children: [Text("3"), Text("元")])),
+                                        children: [Text(expense), Text("元")])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("8"), Text("站")])),
+                                    child: Column(children: [
+                                      Text(totalStations.toString()),
+                                      Text("站")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("0"), Text("换")])),
+                                    child: Column(children: [
+                                      Text(transitTimes.toString()),
+                                      Text("换")
+                                    ])),
                                 Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                        children: [Text("53"), Text("分")])),
+                                    child: Column(children: [
+                                      Text((int.parse(expensetime) ~/ 60 + 1)
+                                          .toString()),
+                                      Text("分")
+                                    ])),
                               ],
                             ),
                           ))
@@ -822,7 +933,7 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult),
+                      onPressed: () => goToRouteResultPage(routeResult, "最舒适"),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -874,8 +985,9 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void goToRouteResultPage(Map<String, dynamic> routeResult) {
-    NavigatorUtils.pushPageByFade(context: context, targPage: RouteResultPage(routeResult));
+  void goToRouteResultPage(Map<String, dynamic> routeResult, String plan) {
+    NavigatorUtils.pushPageByFade(
+        context: context, targPage: RouteResultPage(routeResult, plan));
   }
 }
 
