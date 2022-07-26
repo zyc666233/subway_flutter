@@ -600,14 +600,14 @@ class _FirstStartPageState extends State<FirstStartPage> {
 
   // 添加常去城市
   void _showMultiSelectCities() async {
-    await showModalBottomSheet(
-      isScrollControlled: true,
+    await showDialog(
+      // isScrollControlled: true,
       context: context,
       builder: (ctx) {
-        return MultiSelectBottomSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.8,
-          minChildSize: 0.2,
+        return MultiSelectDialog(
+          // initialChildSize: 0.6,
+          // maxChildSize: 0.8,
+          // minChildSize: 0.2,
           items: _cities.map((e) => MultiSelectItem(e, e)).toList(),
           initialValue: _addFrequentCities,
           onConfirm: (values) {
@@ -663,14 +663,14 @@ class _FirstStartPageState extends State<FirstStartPage> {
         _stations = cityStationsResult['上海市'].cast<String>();
       }
     }
-    await showModalBottomSheet(
-      isScrollControlled: true,
+    await showDialog(
+      // isScrollControlled: true,
       context: context,
       builder: (ctx) {
-        return MultiSelectBottomSheet(
-          initialChildSize: 0.6,
-          maxChildSize: 0.8,
-          minChildSize: 0.2,
+        return MultiSelectDialog(
+          // initialChildSize: 0.6,
+          // maxChildSize: 0.8,
+          // minChildSize: 0.2,
           items: _stations.map((e) => MultiSelectItem(e, e)).toList(),
           initialValue: _addFrequentStations,
           onConfirm: (values) {
@@ -697,9 +697,11 @@ class _FirstStartPageState extends State<FirstStartPage> {
             } else {
               _addFrequentStations = [];
               for (var item in values) {
-                _addFrequentStations.add(item.toString());
+                if (!_addFrequentCities.contains(item.toString())){
+                  _addFrequentStations.add(item.toString());
+                }
               }
-              // print(_addFrequentCities);
+              print(_addFrequentCities);
             }
           },
           searchable: true,

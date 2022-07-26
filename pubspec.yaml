@@ -40,6 +40,7 @@ dependencies:
   jaguar_flutter_asset: ^3.0.0
   video_player: ^2.4.4
   multi_select_flutter: ^4.1.2
+  expansion_tile_card: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
