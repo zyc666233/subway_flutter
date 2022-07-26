@@ -137,7 +137,11 @@ class HomePageState extends State<HomePage> {
                   "步行时长：${_walkHomeTime}",
                   style: TextStyle(fontSize: 15),
                 ),
-                onTap: () => showStationOnMap(_userHome),
+                onTap: () {
+                  if (_departureStation == "出发站点" || _reachStation == "到达站点") {
+                    showStationOnMap(_userHome);
+                  }
+                },
               ),
             ),
             Container(
@@ -156,7 +160,11 @@ class HomePageState extends State<HomePage> {
                   "步行时长：${_walkCompanyTime}",
                   style: TextStyle(fontSize: 15),
                 ),
-                onTap: () => showStationOnMap(_userCompany),
+                onTap: () {
+                  if (_departureStation == "出发站点" || _reachStation == "到达站点") {
+                    showStationOnMap(_userCompany);
+                  }
+                },
               ),
             ),
             Expanded(
@@ -256,7 +264,8 @@ class HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     child: Text(
                                       _departureStation,
-                                      style: TextStyle(fontSize: 16, color: textColorStart),
+                                      style: TextStyle(
+                                          fontSize: 16, color: textColorStart),
                                     ),
                                     onTap: () async {
                                       //这里是跳转搜索界面的关键
@@ -316,7 +325,8 @@ class HomePageState extends State<HomePage> {
                                   child: InkWell(
                                     child: Text(
                                       _reachStation,
-                                      style: TextStyle(fontSize: 16, color: textColorEnd),
+                                      style: TextStyle(
+                                          fontSize: 16, color: textColorEnd),
                                     ),
                                     onTap: () async {
                                       //这里是跳转搜索界面的关键
@@ -580,7 +590,7 @@ class HomePageState extends State<HomePage> {
     int transitTimes = segmentlist.length - 1; // 中转次数
     int totalStations = 0; // 全程经过的站点总数
     String expense = buslist["expense"]; // 全程票价
-    if (expense.endsWith(".0")){
+    if (expense.endsWith(".0")) {
       expense = expense.substring(0, expense.length - 2);
     }
     LogUtils.e(expense);
