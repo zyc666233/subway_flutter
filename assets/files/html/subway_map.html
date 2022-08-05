@@ -15,17 +15,17 @@
     <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
     <script type="text/javascript">
         var mySubway, startInfo, endInfo;
-        var adcode = adcodes["上海市"]["adcode"];
-        var city = "上海市";
+        // var city = "上海市";
         window.cbk = function () {
-            createMap(city)
+            createMap()
+            // setAdcode(city)
         };
 
         // 根据城市名称创建地图
-        function createMap(city) {
+        function createMap() {
             mySubway = subway("mybox", {
                 // easy: true,
-                adcode: adcodes[city]["adcode"],
+                // adcode: adcodes[city]["adcode"],
                 theme: "colorful",
                 client: 0,
                 doubleclick: {
@@ -118,6 +118,13 @@
             });
         }
 
+        // 设置城市编码
+        function setAdcode(city_name){
+            console.log(city_name)
+            var adcode = adcodes[city_name]["adcode"];
+            mySubway.setAdcode(adcode)
+        }
+
         // 根据id显示站点的信息窗体
         function touchStation(id) {
             console.log(id)
@@ -189,6 +196,13 @@
             }
         }
 
+        // 清除路线规划结果
+        function clearRoute() {
+            mySubway.clearRoute();
+            console.log(startInfo.id);
+            console.log(endInfo.id);
+        }
+
         // 根据站点名获取站点信息
         function searchStation(name) {
             var station_list
@@ -198,12 +212,6 @@
                 station_list = json_data
             })
             return station_list
-        }
-
-        // 销毁mysubway对象
-        function deleteMysubway(){
-            mySubway = null
-            delete(mySubway);
         }
 
     </script>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!--重要meta, 必须!-->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,shrink-to-fit=no" />
+    <title>SUBWAY</title>
+</head>
+
+<body>
+    <div id="mybox"></div>
+    <script src="../js/adcode.js"></script>
+    <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
+    <script type="text/javascript">
+        var mySubway, startInfo, endInfo;
+
+        window.cbk = function () {
+            createMap()
+        };
+
+        // 根据城市名称创建地图
+        function createMap() {
+            startInfo = {};
+            endInfo = {};
+
+            mySubway = subway("mybox", {
+                // easy: true,
+                // adcode: adcodes[city]["adcode"],
+                theme: "colorful",
+                client: 0,
+                doubleclick: {
+                    switch: true
+                }
+            });
+
+            // 地铁加载完成，执行complete事件
+            mySubway.event.on("subway.complete", function (ev, info) {
+                var id = info.id;
+                console.log("msyydsmsyydsmsyyds")
+                console.log(startInfo.name)
+                console.log(endInfo.name)
+                subwayCompleteCallFlutterRoute.postMessage("subwayCompleteSuccess");
+                subwayCompleteCallFlutterStart.postMessage("subwayCompleteSuccess");
+                subwayCompleteCallFlutterEnd.postMessage("subwayCompleteSuccess");
+                subwayCompleteCallFlutterTransfer.postMessage("subwayCompleteSuccess");
+            });
+
+            // 地铁图缩放
+            mySubway.event.on("subway.move", function (ev, info) {
+                var id = info.id;
+                // console.log(info);
+            });
+
+            // // 点击站点，显示此站点的信息窗体
+            // mySubway.event.on("station.touch", function (ev, info) {
+            //     // console.log(info)
+            //     var id = info.id;
+            //     touchStation(id)
+            // });
+
+            // // 点击线路名，高亮此线路
+            // mySubway.event.on("lineName.touch", function (ev, info) {
+            //     // console.log(info)
+            //     mySubway.showLine(info.id);
+            //     // var select_obj = qs('#g-select');
+            //     // mySubway.setFitView("mybox");
+            //     var center = mySubway.getSelectedLineCenter();
+            //     mySubway.setCenter(center);
+            // });
+
+            // // 点击空白处
+            // mySubway.event.on("subway.touch", function () {
+            //     mySubway.clearInfoWindow();
+            //     mySubway.clearLine();
+            //     clearStart();
+            //     clearEnd();
+            //     // touchMapCallFlutter.postMessage("true")
+            // });
+
+            // // 设置起点
+            // mySubway.event.on("startStation.touch", function (ev, info) {
+            //     setStartStation(info.id)
+            //     var json_data = JSON.stringify(info);
+            //     console.log(json_data)
+            //     // stationBackCallFlutter.postMessage(json_data);
+            // });
+
+            // // 设置终点
+            // mySubway.event.on("endStation.touch", function (ev, info) {
+            //     setEndStation(info.id)
+            //     var json_data = JSON.stringify(info);
+            //     console.log(json_data)
+            //     // stationBackCallFlutter.postMessage(json_data);
+            // });
+
+            // 路径规划完毕后触发此事件
+            // mySubway.event.on("subway.routeComplete", function (ev, info) {
+            //     // var json_data = JSON.stringify(ev);
+            //     // console.log(json_data);
+            //     var json_data = JSON.stringify(info);
+            //     // console.log(json_data);
+            //     // routeCompletedCallFlutter.postMessage(json_data)
+            // });
+        }
+
+        // 设置城市编码
+        function initMap(city_name, start_station, end_station) {
+            console.log(city_name)
+            startInfo.name = start_station
+            endInfo.name = end_station
+            var adcode = adcodes[city_name]["adcode"];
+            mySubway.setAdcode(adcode)
+        }
+
+        // 显示中转站点
+        function setTransferStation(name) {
+            // mySubway.stopAnimation();
+            mySubway.addMarker(name, {});
+            var center = mySubway.getStCenter(name);
+            mySubway.setCenter(center);
+        }
+
+        // 显示起点
+        function setStartStation() {
+            // mySubway.stopAnimation();
+            mySubway.clearInfoWindow();
+            mySubway.setStart(startInfo.name, {});
+            var center = mySubway.getStCenter(startInfo.name);
+            mySubway.setCenter(center);
+
+
+        }
+
+        // 显示终点
+        function setEndStation() {
+            // mySubway.stopAnimation();
+            mySubway.clearInfoWindow();
+            mySubway.setEnd(endInfo.name, {});
+            var center = mySubway.getStCenter(endInfo.name);
+            mySubway.setCenter(center);
+        }
+
+        // 路线规划
+        function route() {
+            mySubway.clearInfoWindow();
+            mySubway.setStart(startInfo.name, {});
+            mySubway.setEnd(endInfo.name, {});
+            mySubway.route(startInfo.name, endInfo.name, {
+                closeBtn: false
+            });
+        }
+    </script>
+</body>
+
+</html>
