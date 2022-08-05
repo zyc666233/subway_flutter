@@ -45,10 +45,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  String _filePath = "assets/files/subway_map_test.html";
-  String _jsPath = 'assets/files/adcode.js';
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
   WebViewController? _webViewController;
 
   var _scaffoldkey = new GlobalKey<ScaffoldState>(); //将Scaffold设置为全局变量
@@ -69,392 +65,385 @@ class HomePageState extends State<HomePage> {
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     // SystemChrome.setSystemUIOverlayStyle(_style);
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // theme: Config.themeData,
-      home: Scaffold(
-        key: _scaffoldkey,
-        // 侧边栏
-        drawer: Drawer(
-          child: Column(children: [
-            UserAccountsDrawerHeader(
-              // 用户头像
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: _headImage,
+    return Scaffold(
+      key: _scaffoldkey,
+      // 侧边栏
+      drawer: Drawer(
+        child: Column(children: [
+          UserAccountsDrawerHeader(
+            // 用户头像
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: _headImage,
+            ),
+            // 所在城市
+            accountEmail: Text(
+              "所在城市：${_userCity}",
+              style: TextStyle(fontSize: 12),
+            ),
+            // 用户名
+            accountName: Text(
+              _userName,
+              style: TextStyle(fontSize: 16),
+            ),
+            // 编辑按钮
+            otherAccountsPictures: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 1, right: 1, top: 9, bottom: 9),
+                child: TextButton(
+                    style: ButtonStyle(
+                      //圆角
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6))),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.grey[100]),
+                      // minimumSize: MaterialStateProperty.all(Size(1, 2)),
+                      padding: MaterialStateProperty.all(EdgeInsets.only(
+                          left: 2, right: 2, top: 1, bottom: 1)),
+                      textStyle:
+                          MaterialStateProperty.all(TextStyle(fontSize: 12)),
+                      // side: MaterialStateProperty.all(
+                      //     BorderSide(color: Colors.white)),
+                    ),
+                    onPressed: () => modifyInfo(),
+                    child: Text("编辑",
+                        style: TextStyle(
+                          color: Colors.blue[600],
+                        ))),
               ),
-              // 所在城市
-              accountEmail: Text(
-                "所在城市：${_userCity}",
-                style: TextStyle(fontSize: 12),
+            ],
+          ),
+          // 显示的站点列表
+          Container(
+            padding: EdgeInsets.only(bottom: 5),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom:
+                        BorderSide(width: 0.8, color: Colors.grey.shade400))),
+            child: ListTile(
+              leading: CircleAvatar(child: Icon(Icons.home)),
+              title: Text(
+                _userHome,
+                style: TextStyle(fontSize: 18),
               ),
-              // 用户名
-              accountName: Text(
-                _userName,
-                style: TextStyle(fontSize: 16),
+              trailing: Text(
+                "步行时长：${_walkHomeTime}",
+                style: TextStyle(fontSize: 15),
               ),
-              // 编辑按钮
-              otherAccountsPictures: <Widget>[
-                Container(
-                  padding:
-                      EdgeInsets.only(left: 1, right: 1, top: 9, bottom: 9),
-                  child: TextButton(
-                      style: ButtonStyle(
-                        //圆角
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6))),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.grey[100]),
-                        // minimumSize: MaterialStateProperty.all(Size(1, 2)),
-                        padding: MaterialStateProperty.all(EdgeInsets.only(
-                            left: 2, right: 2, top: 1, bottom: 1)),
-                        textStyle:
-                            MaterialStateProperty.all(TextStyle(fontSize: 12)),
-                        // side: MaterialStateProperty.all(
-                        //     BorderSide(color: Colors.white)),
-                      ),
-                      onPressed: () => modifyInfo(),
-                      child: Text("编辑",
-                          style: TextStyle(
-                            color: Colors.blue[600],
-                          ))),
+              onTap: () {
+                if (_departureStation == "出发站点" || _reachStation == "到达站点") {
+                  showStationOnMap(_userHome);
+                }
+              },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 5, bottom: 5),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom:
+                        BorderSide(width: 0.8, color: Colors.grey.shade400))),
+            child: ListTile(
+              leading: CircleAvatar(child: Icon(Icons.business)),
+              title: Text(
+                _userCompany,
+                style: TextStyle(fontSize: 18),
+              ),
+              trailing: Text(
+                "步行时长：${_walkCompanyTime}",
+                style: TextStyle(fontSize: 15),
+              ),
+              onTap: () {
+                if (_departureStation == "出发站点" || _reachStation == "到达站点") {
+                  showStationOnMap(_userCompany);
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: Container(
+                padding: EdgeInsets.only(left: 8),
+                child: ListView.builder(
+                    // shrinkWrap: true,
+                    itemCount: _addFrequentStations.length,
+                    itemBuilder: (context, index) {
+                      // 创建一个富文本，匹配的内容特别显示
+                      return Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    width: 0.8, color: Colors.grey.shade400))),
+                        child: ListTile(
+                          style: ListTileStyle.list,
+                          leading: Icon(Icons.subway),
+                          title: Text(
+                            _addFrequentStations[index],
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          onTap: () {
+                            if (_departureStation == "出发站点" ||
+                                _reachStation == "到达站点") {
+                              showStationOnMap(_addFrequentStations[index]);
+                            }
+                          },
+                        ),
+                      );
+                    }),
+              ),
+            ),
+          )
+        ]),
+      ),
+      // 页面主体
+      body: Column(
+        children: [
+          // 搜索栏
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Color.fromARGB(255, 245, 245, 245),
+                  width: 0.0), //灰色的一层边框
+              color: Color.fromARGB(255, 240, 240, 240),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            padding: const EdgeInsets.fromLTRB(10, 40, 20, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    padding: EdgeInsets.all(0),
+                    icon: Icon(Icons.person),
+                    iconSize: 40,
+                    onPressed: () {
+                      if (!_scaffoldkey.currentState!.isDrawerOpen) {
+                        _scaffoldkey.currentState?.openDrawer();
+                      }
+                    },
+                  ),
                 ),
+                SizedBox(width: 15),
+                Expanded(
+                  flex: 9,
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: new BoxDecoration(
+                          border: Border.all(
+                              color: Colors.grey, width: 0.0), //灰色的一层边框
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                        alignment: Alignment.center,
+                        // width: 100,
+                        height: 40,
+                        // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
+                        padding: EdgeInsets.only(left: 6, right: 6),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.blue,
+                                )),
+                            Expanded(
+                                flex: 6,
+                                child: InkWell(
+                                  child: Text(
+                                    _departureStation,
+                                    style: TextStyle(
+                                        fontSize: 16, color: textColorStart),
+                                  ),
+                                  onTap: () async {
+                                    //这里是跳转搜索界面的关键
+                                    var station_back = await showSearch(
+                                        context: context,
+                                        delegate: SearchBarDelegate());
+                                    print(station_back);
+                                    if (station_back != null &&
+                                        station_back != '') {
+                                      setState(() {
+                                        _departureStation = station_back;
+                                        textColorStart = blackTextColor;
+                                        setStartStationOnMap(_departureStation);
+                                      });
+                                    }
+                                  },
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      _departureStation = "出发站点";
+                                      textColorStart = greyTextColor;
+                                      _webViewController
+                                          ?.runJavascript("clearStart()");
+                                      _webViewController
+                                          ?.runJavascript("clearRoute()");
+                                    });
+                                  },
+                                ))
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: new BoxDecoration(
+                          border: Border.all(
+                              color: Colors.grey, width: 0.0), //灰色的一层边框
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                        alignment: Alignment.center,
+                        // width: 100,
+                        height: 40,
+                        // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
+                        padding: EdgeInsets.only(left: 6, right: 6),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.blue,
+                                )),
+                            Expanded(
+                                flex: 6,
+                                child: InkWell(
+                                  child: Text(
+                                    _reachStation,
+                                    style: TextStyle(
+                                        fontSize: 16, color: textColorEnd),
+                                  ),
+                                  onTap: () async {
+                                    //这里是跳转搜索界面的关键
+                                    var station_back = await showSearch(
+                                        context: context,
+                                        delegate: SearchBarDelegate());
+                                    print(station_back);
+                                    if (station_back != null &&
+                                        station_back != '') {
+                                      setState(() {
+                                        _reachStation = station_back;
+                                        textColorEnd = blackTextColor;
+                                        setEndStationOnMap(_reachStation);
+                                      });
+                                    }
+                                  },
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      _reachStation = "到达站点";
+                                      textColorEnd = greyTextColor;
+                                      _webViewController
+                                          ?.runJavascript("clearEnd()");
+                                      _webViewController
+                                          ?.runJavascript("clearRoute()");
+                                    });
+                                  },
+                                ))
+                          ],
+                        ),
+                      ),
+                      // SearchBar(
+                      //   hintText: _departureStation,
+                      //   stationCallBack: (station_name) {
+                      //     LogUtils.e(station_name);
+                      //     setStartStationOnMap(station_name);
+                      //   },
+
+                      // ),
+                      // SearchBar(
+                      //   hintText: _reachStation,
+                      //   stationCallBack: (station_name) {
+                      //     LogUtils.e(station_name);
+                      //     setEndStationOnMap(station_name);
+                      //   },
+                      // ),
+                    ],
+                  ),
+                )
               ],
             ),
-            // 显示的站点列表
-            Container(
-              padding: EdgeInsets.only(bottom: 5),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
-              child: ListTile(
-                leading: CircleAvatar(child: Icon(Icons.home)),
-                title: Text(
-                  _userHome,
-                  style: TextStyle(fontSize: 18),
-                ),
-                trailing: Text(
-                  "步行时长：${_walkHomeTime}",
-                  style: TextStyle(fontSize: 15),
-                ),
-                onTap: () {
-                  if (_departureStation == "出发站点" || _reachStation == "到达站点") {
-                    showStationOnMap(_userHome);
-                  }
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 5, bottom: 5),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
-              child: ListTile(
-                leading: CircleAvatar(child: Icon(Icons.business)),
-                title: Text(
-                  _userCompany,
-                  style: TextStyle(fontSize: 18),
-                ),
-                trailing: Text(
-                  "步行时长：${_walkCompanyTime}",
-                  style: TextStyle(fontSize: 15),
-                ),
-                onTap: () {
-                  if (_departureStation == "出发站点" || _reachStation == "到达站点") {
-                    showStationOnMap(_userCompany);
-                  }
-                },
-              ),
-            ),
-            Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: Container(
-                  padding: EdgeInsets.only(left: 8),
-                  child: ListView.builder(
-                      // shrinkWrap: true,
-                      itemCount: _addFrequentStations.length,
-                      itemBuilder: (context, index) {
-                        // 创建一个富文本，匹配的内容特别显示
-                        return Container(
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      width: 0.8,
-                                      color: Colors.grey.shade400))),
-                          child: ListTile(
-                            style: ListTileStyle.list,
-                            leading: Icon(Icons.subway),
-                            title: Text(
-                              _addFrequentStations[index],
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            onTap: () {
-                              if (_departureStation == "出发站点" ||
-                                  _reachStation == "到达站点") {
-                                showStationOnMap(_addFrequentStations[index]);
-                              }
-                            },
-                          ),
-                        );
-                      }),
-                ),
-              ),
-            )
-          ]),
-        ),
-        // 页面主体
-        body: Column(
-          children: [
-            // 搜索栏
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: Color.fromARGB(255, 245, 245, 245),
-                    width: 0.0), //灰色的一层边框
-                color: Color.fromARGB(255, 240, 240, 240),
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              padding: const EdgeInsets.fromLTRB(10, 40, 20, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.person),
-                      iconSize: 40,
-                      onPressed: () {
-                        if (!_scaffoldkey.currentState!.isDrawerOpen) {
-                          _scaffoldkey.currentState?.openDrawer();
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 15),
-                  Expanded(
-                    flex: 9,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: new BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey, width: 0.0), //灰色的一层边框
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          alignment: Alignment.center,
-                          // width: 100,
-                          height: 40,
-                          // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
-                          padding: EdgeInsets.only(left: 6, right: 6),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.blue,
-                                  )),
-                              Expanded(
-                                  flex: 6,
-                                  child: InkWell(
-                                    child: Text(
-                                      _departureStation,
-                                      style: TextStyle(
-                                          fontSize: 16, color: textColorStart),
-                                    ),
-                                    onTap: () async {
-                                      //这里是跳转搜索界面的关键
-                                      var station_back = await showSearch(
-                                          context: context,
-                                          delegate: SearchBarDelegate());
-                                      print(station_back);
-                                      if (station_back != null &&
-                                          station_back != '') {
-                                        setState(() {
-                                          _departureStation = station_back;
-                                          textColorStart = blackTextColor;
-                                          setStartStationOnMap(
-                                              _departureStation);
-                                        });
-                                      }
-                                    },
-                                  )),
-                              Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      setState(() {
-                                        _departureStation = "出发站点";
-                                        textColorStart = greyTextColor;
-                                        _webViewController
-                                            ?.runJavascript("clearStart()");
-                                      });
-                                    },
-                                  ))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: new BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey, width: 0.0), //灰色的一层边框
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          alignment: Alignment.center,
-                          // width: 100,
-                          height: 40,
-                          // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
-                          padding: EdgeInsets.only(left: 6, right: 6),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.blue,
-                                  )),
-                              Expanded(
-                                  flex: 6,
-                                  child: InkWell(
-                                    child: Text(
-                                      _reachStation,
-                                      style: TextStyle(
-                                          fontSize: 16, color: textColorEnd),
-                                    ),
-                                    onTap: () async {
-                                      //这里是跳转搜索界面的关键
-                                      var station_back = await showSearch(
-                                          context: context,
-                                          delegate: SearchBarDelegate());
-                                      print(station_back);
-                                      if (station_back != null &&
-                                          station_back != '') {
-                                        setState(() {
-                                          _reachStation = station_back;
-                                          textColorEnd = blackTextColor;
-                                          setEndStationOnMap(_reachStation);
-                                        });
-                                      }
-                                    },
-                                  )),
-                              Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      setState(() {
-                                        _reachStation = "到达站点";
-                                        textColorEnd = greyTextColor;
-                                        _webViewController
-                                            ?.runJavascript("clearEnd()");
-                                      });
-                                    },
-                                  ))
-                            ],
-                          ),
-                        ),
-                        // SearchBar(
-                        //   hintText: _departureStation,
-                        //   stationCallBack: (station_name) {
-                        //     LogUtils.e(station_name);
-                        //     setStartStationOnMap(station_name);
-                        //   },
-
-                        // ),
-                        // SearchBar(
-                        //   hintText: _reachStation,
-                        //   stationCallBack: (station_name) {
-                        //     LogUtils.e(station_name);
-                        //     setEndStationOnMap(station_name);
-                        //   },
-                        // ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            // 地铁图
-            Expanded(
-                child: WebView(
-              initialUrl: "http://0.0.0.0:9998/files/html/subway_map_test.html",
-              javascriptMode: JavascriptMode.unrestricted,
-              javascriptChannels: {
-                JavascriptChannel(
-                    name: "stationBackCallFlutter",
-                    onMessageReceived: (msg) {
-                      print(msg.message);
-                      Map<String, dynamic> stationInfo =
-                          jsonDecode(msg.message);
-                      if (stationInfo["type"] == "start") {
-                        setState(() {
-                          _departureStation = stationInfo["name"];
-                          textColorStart = blackTextColor;
-                        });
-                      }
-                      if (stationInfo["type"] == "end") {
-                        setState(() {
-                          _reachStation = stationInfo["name"];
-                          textColorEnd = blackTextColor;
-                        });
-                      }
-                    }),
-                JavascriptChannel(
-                    name: "touchMapCallFlutter",
-                    onMessageReceived: (msg) {
-                      print(msg.message);
-                      if (msg.message == "true") {
-                        setState(() {
-                          textColorStart = textColorEnd = greyTextColor;
-                          _departureStation = "出发站点";
-                          _reachStation = "到达站点";
-                        });
-                      }
-                    }),
-                JavascriptChannel(
-                    name: "routeCompletedCallFlutter",
-                    onMessageReceived: (msg) async {
-                      // LogUtils.e(msg.message);
-                      routeResult = jsonDecode(msg.message);
-                      Directory tempDir = await getTemporaryDirectory();
-                      String tempPath = tempDir.path;
-                      File route_result = File("$tempPath/route_result.txt");
-                      route_result.writeAsStringSync(msg.message);
-                      if (routeResult["info"] == "success") {
-                        showRouteResult(routeResult);
-                      }
-                    }),
-              },
-              onWebViewCreated: (WebViewController webViewController) {
-                _webViewController = webViewController;
-                // _loadHtmlFromAssets();
-              },
-              onPageFinished: (url) async {
-                // print(url);
-                // String jsContent = await rootBundle.loadString(jsPath);
-                // _webViewController?.runJavascript(jsContent);
-              },
-            )),
-          ],
-        ),
-        // 悬浮按钮用于查看搜索结果
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-          onPressed: () {
-            if (_departureStation != "出发站点" &&
-                _reachStation != "到达站点" &&
-                routeResult != {}) {
-              showRouteResult(routeResult);
-            }
-          },
-        ),
+          ),
+          // 地铁图
+          Expanded(
+              child: WebView(
+            initialUrl: "http://0.0.0.0:9998/files/html/subway_map.html",
+            javascriptMode: JavascriptMode.unrestricted,
+            javascriptChannels: {
+              JavascriptChannel(
+                  name: "stationBackCallFlutter",
+                  onMessageReceived: (msg) {
+                    print(msg.message);
+                    Map<String, dynamic> stationInfo = jsonDecode(msg.message);
+                    if (stationInfo["type"] == "start") {
+                      setState(() {
+                        _departureStation = stationInfo["name"];
+                        textColorStart = blackTextColor;
+                      });
+                    }
+                    if (stationInfo["type"] == "end") {
+                      setState(() {
+                        _reachStation = stationInfo["name"];
+                        textColorEnd = blackTextColor;
+                      });
+                    }
+                  }),
+              JavascriptChannel(
+                  name: "touchMapCallFlutter",
+                  onMessageReceived: (msg) {
+                    print(msg.message);
+                    if (msg.message == "true") {
+                      setState(() {
+                        textColorStart = textColorEnd = greyTextColor;
+                        _departureStation = "出发站点";
+                        _reachStation = "到达站点";
+                      });
+                    }
+                  }),
+              JavascriptChannel(
+                  name: "routeCompletedCallFlutter",
+                  onMessageReceived: (msg) async {
+                    // LogUtils.e(msg.message);
+                    routeResult = jsonDecode(msg.message);
+                    Directory tempDir = await getTemporaryDirectory();
+                    String tempPath = tempDir.path;
+                    File route_result = File("$tempPath/route_result.txt");
+                    route_result.writeAsStringSync(msg.message);
+                    if (routeResult["info"] == "success") {
+                      showRouteResult(routeResult);
+                    }
+                  }),
+            },
+            onWebViewCreated: (WebViewController webViewController) {
+              _webViewController = webViewController;
+            },
+            onPageFinished: (url) async {
+              _webViewController?.runJavascript("setAdcode('$_userCity')");
+            },
+          )),
+        ],
+      ),
+      // 悬浮按钮用于查看搜索结果
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.search),
+        onPressed: () {
+          if (_departureStation != "出发站点" &&
+              _reachStation != "到达站点" &&
+              routeResult != {}) {
+            showRouteResult(routeResult);
+          }
+        },
       ),
     );
   }
@@ -750,7 +739,8 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult, "最便宜"),
+                      onPressed: () =>
+                          goToRouteResultPage(routeResult, "最少换乘", _userCity),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -845,7 +835,8 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult, "最快速"),
+                      onPressed: () =>
+                          goToRouteResultPage(routeResult, "最快速", _userCity),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -943,7 +934,8 @@ class HomePageState extends State<HomePage> {
                   ),
                   trailing: IconButton(
                       iconSize: 35,
-                      onPressed: () => goToRouteResultPage(routeResult, "最舒适"),
+                      onPressed: () =>
+                          goToRouteResultPage(routeResult, "最舒适", _userCity),
                       icon: Icon(Icons.navigate_next)),
                 ),
               ),
@@ -959,7 +951,7 @@ class HomePageState extends State<HomePage> {
                             image: AssetImage(
                                 "assets/images/green_triangle.png"))),
                     Container(
-                      child: Text("最便宜"),
+                      child: Text("少换乘"),
                       margin: EdgeInsets.only(right: 30),
                       padding: EdgeInsets.only(bottom: 20),
                     ),
@@ -995,9 +987,10 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void goToRouteResultPage(Map<String, dynamic> routeResult, String plan) {
+  void goToRouteResultPage(
+      Map<String, dynamic> routeResult, String plan, String city) {
     NavigatorUtils.pushPageByFade(
-        context: context, targPage: RouteResultPage(routeResult, plan));
+        context: context, targPage: RouteResultPage(routeResult, plan, city));
   }
 }
 
