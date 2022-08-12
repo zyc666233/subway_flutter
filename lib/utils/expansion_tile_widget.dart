@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 ///自定义的listTitle,支持自定义标题栏布局
-const Duration _expandSpeed = Duration(milliseconds: 250);
+const Duration _expandSpeed = Duration(milliseconds: 200);
 
 // 分割线显示时机
 enum DividerDisplayTime {
@@ -20,7 +20,8 @@ class UserExpansionTile extends StatefulWidget {
     this.onExpansionChanged, // 伸缩状态改变的回调函数
     this.children = const <Widget>[], // 子组件列表
     this.initiallyExpanded = false, // 初始状态是否展开
-    this.expandSpeed = _expandSpeed, 
+    this.allowVerticalDrag = false, //是否允许垂直拖动
+    this.expandSpeed = _expandSpeed,
   })  : assert(initiallyExpanded != null),
         super(key: key);
 
@@ -40,6 +41,8 @@ class UserExpansionTile extends StatefulWidget {
 
   /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool? initiallyExpanded;
+
+  final bool allowVerticalDrag;
 
   final Color? dividerColor;
 
@@ -78,7 +81,8 @@ class _UserExpansionTileState extends State<UserExpansionTile>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.expandSpeed, vsync: this);
+    _controller =
+        AnimationController(duration: widget.expandSpeed, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     // _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
     // _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
@@ -116,6 +120,37 @@ class _UserExpansionTileState extends State<UserExpansionTile>
       widget.onExpansionChanged!(_isExpanded);
   }
 
+  void _handleVerticalDrag(DragUpdateDetails details) {
+    if (widget.allowVerticalDrag) {
+      // print(details.delta.dy);
+      // 处理上滑和下滑手势
+      if (!_isExpanded && details.delta.dy < -10) {
+        setState(() {
+          _isExpanded = !_isExpanded;
+          if (_isExpanded) {
+            _controller.forward();
+          }
+          PageStorage.of(context)?.writeState(context, _isExpanded);
+        });
+      } else if (_isExpanded && details.delta.dy > 10) {
+        setState(() {
+          _isExpanded = !_isExpanded;
+          if (!_isExpanded) {
+            _controller.reverse().then<void>((void value) {
+              if (!mounted) return;
+              setState(() {
+                // Rebuild without widget.children.
+              });
+            });
+          }
+          PageStorage.of(context)?.writeState(context, _isExpanded);
+        });
+      }
+      if (widget.onExpansionChanged != null)
+        widget.onExpansionChanged!(_isExpanded);
+    }
+  }
+
   Widget _buildChildren(BuildContext context, Widget? child) {
     // final Color borderSideColor = _borderColor.value ?? Colors.transparent;
     return Container(
@@ -132,6 +167,7 @@ class _UserExpansionTileState extends State<UserExpansionTile>
           GestureDetector(
             child: widget.title,
             onTap: _handleTap,
+            onVerticalDragUpdate: _handleVerticalDrag,
           ),
           ClipRect(
             child: Align(

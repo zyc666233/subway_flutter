@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:subway_flutter/pages/modify_info_page.dart';
 import 'package:subway_flutter/pages/pick_stations_page.dart';
+import 'package:subway_flutter/utils/expansion_tile_widget.dart';
 import 'package:subway_flutter/utils/log_utils.dart';
 import 'package:subway_flutter/utils/navigator_utils.dart';
 import 'package:subway_flutter/utils/search_bar_wigdet.dart';
@@ -269,6 +271,10 @@ class HomePageState extends State<HomePage> {
                                       setState(() {
                                         _departureStation = station_back;
                                         textColorStart = blackTextColor;
+                                        if (station_back == _reachStation) {
+                                          _reachStation = "到达站点";
+                                          textColorEnd = greyTextColor;
+                                        }
                                         setStartStationOnMap(_departureStation);
                                       });
                                     }
@@ -331,6 +337,10 @@ class HomePageState extends State<HomePage> {
                                       setState(() {
                                         _reachStation = station_back;
                                         textColorEnd = blackTextColor;
+                                        if (station_back == _departureStation) {
+                                          _departureStation = "出发站点";
+                                          textColorStart = greyTextColor;
+                                        }
                                         setEndStationOnMap(_reachStation);
                                       });
                                     }
@@ -382,6 +392,35 @@ class HomePageState extends State<HomePage> {
             javascriptMode: JavascriptMode.unrestricted,
             javascriptChannels: {
               JavascriptChannel(
+                  name: "subwayCompletedCallFlutter",
+                  onMessageReceived: (msg) async {
+                    // print(msg.message);
+                    Map<String, dynamic> stationInfo = jsonDecode(msg.message);
+                    Directory tempDir = await getTemporaryDirectory();
+                    String tempPath = tempDir.path;
+                    print(tempPath);
+                    File data = File("$tempPath/data.json");
+                    String cityList = "";
+                    for(var item in stationInfo.keys){
+                      String temp = stationInfo[item]["name"].toString();
+                      if(temp.endsWith("市")){
+                        temp = temp.split("市")[0];
+                      }else if(temp.endsWith("特别行政区")){
+                        temp = temp.split("特别行政区")[0];
+                      }
+                      cityList += (temp + '\n');
+                    }
+                    data.writeAsStringSync(cityList);
+                    
+                  }),
+              JavascriptChannel(
+                  name: "touchStationCallFlutter",
+                  onMessageReceived: (msg) {
+                    print(msg.message);
+                    Map<String, dynamic> stationInfo = jsonDecode(msg.message);
+                    showStationDetails(stationInfo);
+                  }),
+              JavascriptChannel(
                   name: "stationBackCallFlutter",
                   onMessageReceived: (msg) {
                     print(msg.message);
@@ -390,12 +429,20 @@ class HomePageState extends State<HomePage> {
                       setState(() {
                         _departureStation = stationInfo["name"];
                         textColorStart = blackTextColor;
+                        if (stationInfo["name"] == _reachStation) {
+                          _reachStation = "到达站点";
+                          textColorEnd = greyTextColor;
+                        }
                       });
                     }
                     if (stationInfo["type"] == "end") {
                       setState(() {
                         _reachStation = stationInfo["name"];
                         textColorEnd = blackTextColor;
+                        if (stationInfo["name"] == _departureStation) {
+                          _departureStation = "出发站点";
+                          textColorStart = greyTextColor;
+                        }
                       });
                     }
                   }),
@@ -416,10 +463,10 @@ class HomePageState extends State<HomePage> {
                   onMessageReceived: (msg) async {
                     // LogUtils.e(msg.message);
                     routeResult = jsonDecode(msg.message);
-                    Directory tempDir = await getTemporaryDirectory();
-                    String tempPath = tempDir.path;
-                    File route_result = File("$tempPath/route_result.txt");
-                    route_result.writeAsStringSync(msg.message);
+                    // Directory tempDir = await getTemporaryDirectory();
+                    // String tempPath = tempDir.path;
+                    // File route_result = File("$tempPath/route_result.txt");
+                    // route_result.writeAsStringSync(msg.message);
                     if (routeResult["info"] == "success") {
                       showRouteResult(routeResult);
                     }
@@ -510,7 +557,7 @@ class HomePageState extends State<HomePage> {
       if (cityStationsResult.containsKey(userCity)) {
         stationList = cityStationsResult[userCity].cast<String>();
       }
-      LogUtils.e("msyydsyydsyyds" + stationList.length.toString());
+      LogUtils.e("msyydsyydsyyds " + stationList.length.toString());
     }
     // if (Platform.isAndroid) {
     //   WebView.platform = SurfaceAndroidWebView();
@@ -542,6 +589,7 @@ class HomePageState extends State<HomePage> {
         Navigator.pop(currentContext!);
       }
       _webViewController?.runJavascript("touchStation('$station_id')");
+      showStationDetails(station_info["stationList"][0]);
     });
   }
 
@@ -597,6 +645,7 @@ class HomePageState extends State<HomePage> {
 
     return showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
       //自定义底部弹窗布局
       shape: new RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -604,8 +653,9 @@ class HomePageState extends State<HomePage> {
       ),
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height / 2.0,
+          // height: MediaQuery.of(context).size.height / 2.0,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // 弹窗标题栏
               Container(
@@ -991,6 +1041,288 @@ class HomePageState extends State<HomePage> {
       Map<String, dynamic> routeResult, String plan, String city) {
     NavigatorUtils.pushPageByFade(
         context: context, targPage: RouteResultPage(routeResult, plan, city));
+  }
+
+  void showStationDetails(Map<String, dynamic> stationInfo) async {
+    IconData arrow = Icons.arrow_drop_up;
+    String stationName = stationInfo["name"];
+    List<dynamic> referLines = stationInfo["referlines"];
+    List<Widget> referLinesList = [];
+    LogUtils.e(stationName);
+    for (var i = 0; i < referLines.length; i++) {
+      LogUtils.e(referLines[i]["name"]);
+      String hexColorString = referLines[i]["color"].toString();
+      if (hexColorString.length == 6) {
+        hexColorString = "0xFF" + hexColorString;
+      }
+      referLinesList.add(Container(
+        padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+        margin: EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            border: Border.all(color: Colors.black),
+            color: Color(
+              int.parse(hexColorString),
+            )),
+        child: Text(
+          referLines[i]["name"],
+          style: TextStyle(color: Colors.white, fontSize: 15),
+        ),
+      ));
+    }
+
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      enableDrag: false,
+      //自定义底部弹窗布局
+      shape: new RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            // // 弹窗标题栏
+            // Container(
+            //     height: 40,
+            //     decoration: BoxDecoration(
+            //         border: Border(
+            //             bottom: BorderSide(width: 0.8, color: Colors.grey))),
+            //     alignment: Alignment.center,
+            //     child: IconButton(
+            //       padding: EdgeInsets.all(0),
+            //       onPressed: null,
+            //       icon: Icon(
+            //         arrow,
+            //         // color: Colors.grey,
+            //       ),
+            //       iconSize: 35,
+            //     )), // 起点站和终点站的提示信息栏
+            // 站点详情
+            UserExpansionTile(
+              allowVerticalDrag: true,
+              title: Container(
+                  // padding: EdgeInsets.only(left: 20),
+                  margin: EdgeInsets.only(bottom: 20, top: 20),
+                  alignment: Alignment.center,
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 10),
+                    horizontalTitleGap: 10,
+                    // 设为起点和终点的按钮
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 5),
+                          child: TextButton(
+                              style: ButtonStyle(
+                                //圆角
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.lightBlue),
+                                minimumSize:
+                                    MaterialStateProperty.all(Size(1, 2)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.only(
+                                        left: 5, right: 5, top: 5, bottom: 5)),
+                                textStyle: MaterialStateProperty.all(
+                                    TextStyle(fontSize: 10)),
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: Colors.black)),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _departureStation = stationName;
+                                  textColorStart = blackTextColor;
+                                  if (stationName == _reachStation) {
+                                    _reachStation = "到达站点";
+                                    textColorEnd = greyTextColor;
+                                  }
+                                  setStartStationOnMap(_departureStation);
+                                });
+                              },
+                              child: Text("设为起点",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ))),
+                        ),
+                        Container(
+                          // padding: EdgeInsets.only(
+                          //     left: 1, right: 1, top: 9, bottom: 9),
+                          child: TextButton(
+                              style: ButtonStyle(
+                                //圆角
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.pink[200]),
+                                minimumSize:
+                                    MaterialStateProperty.all(Size(1, 2)),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.only(
+                                        left: 5, right: 5, top: 5, bottom: 5)),
+                                textStyle: MaterialStateProperty.all(
+                                    TextStyle(fontSize: 10)),
+                                side: MaterialStateProperty.all(
+                                    BorderSide(color: Colors.black)),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _reachStation = stationName;
+                                  textColorEnd = blackTextColor;
+                                  if (stationName == _departureStation) {
+                                    _departureStation = "出发站点";
+                                    textColorStart = greyTextColor;
+                                  }
+                                  setEndStationOnMap(_reachStation);
+                                });
+                              },
+                              child: Text("设为终点",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ))),
+                        ),
+                      ],
+                    ),
+                    // 站点名和所经过的线路
+                    title: Container(
+                      padding: EdgeInsets.only(right: 6),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: BorderSide(
+                                  color: Colors.lightBlue.shade200))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              padding: EdgeInsets.only(bottom: 5),
+                              child: Text(
+                                stationName,
+                                style: TextStyle(fontSize: 25),
+                              )),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: referLinesList,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.grey))),
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 20),
+                    horizontalTitleGap: 20,
+                    minLeadingWidth: 0,
+                    leading: Icon(Icons.wifi),
+                    title: Text(
+                      "车站信息",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.grey))),
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 20),
+                    horizontalTitleGap: 20,
+                    minLeadingWidth: 0,
+                    leading: Icon(Icons.wifi),
+                    title: Text(
+                      "首末班车时刻表",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.grey))),
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 20),
+                    horizontalTitleGap: 20,
+                    minLeadingWidth: 0,
+                    leading: Icon(Icons.wifi),
+                    title: Text(
+                      "车站设施",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.grey))),
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 20),
+                    horizontalTitleGap: 20,
+                    minLeadingWidth: 0,
+                    leading: Icon(Icons.wifi),
+                    title: Text(
+                      "车站可达性",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.grey))),
+                  child: ListTile(
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(left: 20, right: 20),
+                    horizontalTitleGap: 20,
+                    minLeadingWidth: 0,
+                    leading: Icon(Icons.wifi),
+                    title: Text(
+                      "车站地图",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ]),
+        );
+      },
+    );
   }
 }
 

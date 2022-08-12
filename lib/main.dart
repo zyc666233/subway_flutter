@@ -8,7 +8,6 @@ import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_flutter_asset/jaguar_flutter_asset.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -33,11 +32,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: {
-        '/root': (context) => HomePage(),
-        '/welcome': (context) => WelcomePage(),
-      },
-      home: const MyHomePage(title: '智慧出行demo'),
+      // routes: {
+      //   '/root': (context) => HomePage(),
+      //   '/welcome': (context) => WelcomePage(),
+      // },
+      home: const MyHomePage(title: 'subway_flutter'),
     );
   }
 }
@@ -52,62 +51,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // int _currentIndex = 0; //底部导航栏下标
-  // final List _pageList = [
-  //   const IndexPage(),
-  //   const SitePage(),
-  //   const Notice(),
-  //   const Mine(),
-  // ];
-
   @override
   void initState() {
     super.initState();
     initialization();
-    // Future.delayed(Duration.zero, () {
-    //   welcome();
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: WelcomePage()
-        //底部导航栏
-        // bottomNavigationBar: BottomNavigationBar(
-        //   currentIndex: _currentIndex,
-        //   type: BottomNavigationBarType.fixed,
-        //   iconSize: 30,
-        //   onTap: (int index) {
-        //     setState(() {
-        //       _currentIndex = index;
-        //     });
-        //   },
-        //   items: const [
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.home),
-        //       label: "首页",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.train),
-        //       label: "出行",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.visibility),
-        //       label: "通知",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.people_alt),
-        //       label: "我的",
-        //     ),
-        //   ],
-        // ),
-
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: _incrementCounter,
-        //   tooltip: 'Increment',
-        //   child: const Icon(Icons.add),
-        // ), // This trailing comma makes auto-formatting nicer for build methods.
-        );
+    return Scaffold(body: WelcomePage());
   }
 
   void initialization() async {
@@ -120,10 +72,4 @@ class _MyHomePageState extends State<MyHomePage> {
     // await Future.delayed(const Duration(seconds: 1));
     FlutterNativeSplash.remove();
   }
-
-  // void welcome() {
-  //   NavigatorUtils.pushPageByFade(
-  //       context: context, targPage: WelcomePage(), isReplace: true);
-  //   // Navigator.pushReplacementNamed(context, '/welcome');
-  // }
 }
