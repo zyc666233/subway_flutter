@@ -391,28 +391,29 @@ class HomePageState extends State<HomePage> {
             initialUrl: "http://0.0.0.0:9998/files/html/subway_map.html",
             javascriptMode: JavascriptMode.unrestricted,
             javascriptChannels: {
+              // 地铁图绘制完成后接收消息
               JavascriptChannel(
                   name: "subwayCompletedCallFlutter",
                   onMessageReceived: (msg) async {
                     // print(msg.message);
-                    Map<String, dynamic> stationInfo = jsonDecode(msg.message);
-                    Directory tempDir = await getTemporaryDirectory();
-                    String tempPath = tempDir.path;
-                    print(tempPath);
-                    File data = File("$tempPath/data.json");
-                    String cityList = "";
-                    for(var item in stationInfo.keys){
-                      String temp = stationInfo[item]["name"].toString();
-                      if(temp.endsWith("市")){
-                        temp = temp.split("市")[0];
-                      }else if(temp.endsWith("特别行政区")){
-                        temp = temp.split("特别行政区")[0];
-                      }
-                      cityList += (temp + '\n');
-                    }
-                    data.writeAsStringSync(cityList);
-                    
+                    // Map<String, dynamic> stationInfo = jsonDecode(msg.message);
+                    // Directory tempDir = await getTemporaryDirectory();
+                    // String tempPath = tempDir.path;
+                    // print(tempPath);
+                    // File data = File("$tempPath/data.json");
+                    // String cityList = "";
+                    // for (var item in stationInfo.keys) {
+                    //   String temp = stationInfo[item]["name"].toString();
+                    //   if (temp.endsWith("市")) {
+                    //     temp = temp.split("市")[0];
+                    //   } else if (temp.endsWith("特别行政区")) {
+                    //     temp = temp.split("特别行政区")[0];
+                    //   }
+                    //   cityList += (temp + '\n');
+                    // }
+                    // data.writeAsStringSync(cityList);
                   }),
+              // 地铁图站点被点击时接收消息
               JavascriptChannel(
                   name: "touchStationCallFlutter",
                   onMessageReceived: (msg) {
@@ -420,6 +421,7 @@ class HomePageState extends State<HomePage> {
                     Map<String, dynamic> stationInfo = jsonDecode(msg.message);
                     showStationDetails(stationInfo);
                   }),
+              // 通过地铁图设置起点或终点时接收消息（暂不使用）
               JavascriptChannel(
                   name: "stationBackCallFlutter",
                   onMessageReceived: (msg) {
@@ -446,6 +448,7 @@ class HomePageState extends State<HomePage> {
                       });
                     }
                   }),
+              // 触碰地铁图空白处时接收消息
               JavascriptChannel(
                   name: "touchMapCallFlutter",
                   onMessageReceived: (msg) {
@@ -458,6 +461,7 @@ class HomePageState extends State<HomePage> {
                       });
                     }
                   }),
+              // 地铁图线路规划方法执行完毕后接收消息
               JavascriptChannel(
                   name: "routeCompletedCallFlutter",
                   onMessageReceived: (msg) async {
@@ -495,6 +499,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // 页面初始化工作
   void initialization() async {
     // 获取本地保存的用户信息
     await SPUtil.init();
@@ -559,23 +564,14 @@ class HomePageState extends State<HomePage> {
       }
       LogUtils.e("msyydsyydsyyds " + stationList.length.toString());
     }
-    // if (Platform.isAndroid) {
-    //   WebView.platform = SurfaceAndroidWebView();
-    // }
-    // 启动本地服务器
-    // final server = Jaguar(address: "0.0.0.0", port: 9998);
-    // server.addRoute(serveFlutterAssets());
-    // await server.serve(logRequests: true);
-    // print("本地服务器启动成功！");
-    // print('ready in 3...');
-    // await Future.delayed(const Duration(seconds: 1));
-    // FlutterNativeSplash.remove();
   }
 
+  // 跳转到用户信息编辑页面
   void modifyInfo() {
     NavigatorUtils.pushPageByFade(context: context, targPage: ModifyInfoPage());
   }
 
+  // 点击地图上的站点
   void showStationOnMap(String station_name) {
     _webViewController
         ?.runJavascriptReturningResult("searchStation('$station_name')")
@@ -593,6 +589,7 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  // 在地图上标注起点
   void setStartStationOnMap(String station_name) {
     _webViewController
         ?.runJavascriptReturningResult("searchStation('$station_name')")
@@ -607,6 +604,7 @@ class HomePageState extends State<HomePage> {
     // _webViewController?.runJavascript("createMap('南京市')");
   }
 
+  // 在地图上标注终点
   void setEndStationOnMap(String station_name) {
     _webViewController
         ?.runJavascriptReturningResult("searchStation('$station_name')")
@@ -619,6 +617,7 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  // 展示线路规划结果
   void showRouteResult(Map<String, dynamic> routeResult) async {
     routeResult = routeResult["data"];
     Map<String, dynamic> buslist = routeResult["buslist"][0];
@@ -1037,12 +1036,14 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // 跳转到线路规划详情页面
   void goToRouteResultPage(
       Map<String, dynamic> routeResult, String plan, String city) {
     NavigatorUtils.pushPageByFade(
         context: context, targPage: RouteResultPage(routeResult, plan, city));
   }
 
+  // 通过底部弹窗在地图上显示站点信息
   void showStationDetails(Map<String, dynamic> stationInfo) async {
     IconData arrow = Icons.arrow_drop_up;
     String stationName = stationInfo["name"];
@@ -1326,6 +1327,7 @@ class HomePageState extends State<HomePage> {
   }
 }
 
+// 搜索功能
 class SearchBarDelegate extends SearchDelegate<String> {
   String get searchFieldLabel => "搜索站点";
 

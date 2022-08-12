@@ -446,6 +446,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
     ));
   }
 
+  // 选择站点
   void pickStations(String type) {
     if (_city == '选择所在城市') {
       showDialog(
