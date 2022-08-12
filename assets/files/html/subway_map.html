@@ -14,7 +14,7 @@
     <script src="../js/adcode.js"></script>
     <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
     <script type="text/javascript">
-        var mySubway, startInfo, endInfo;
+        var mySubway, startInfo, endInfo, stationTouchID;
         // var city = "上海市";
         window.cbk = function () {
             createMap()
@@ -39,22 +39,24 @@
                 // mySubway.getCityList(function (citys){
                 //     // console.log(citys);
                 //     var json_data = JSON.stringify(citys);
-                //     console.log(json_data);
+                //     // console.log(json_data);
+                //     // subwayCompletedCallFlutter.postMessage(json_data)
                 // });
                 // mySubway.getLineList(function (lines) {
-                //     console.log(lines);
+                //     // console.log(lines);
                 //     var json_data = JSON.stringify(lines);
-                //     console.log(json_data);
+                //     // console.log(json_data);
+                //     subwayCompletedCallFlutter.postMessage(json_data)
                 // });
-                document.getElementById('select_bg').onclick = function () {
-                    if (startInfo.id && endInfo.id) {
-                        mySubway.clearMarker(startInfo.id)
-                        mySubway.clearMarker(endInfo.id)
-                        startInfo = {}
-                        endInfo = {}
-                    }
-                    mySubway.clearRoute();
-                }
+                // document.getElementById('select_bg').onclick = function () {
+                //     if (startInfo.id && endInfo.id) {
+                //         mySubway.clearMarker(startInfo.id)
+                //         mySubway.clearMarker(endInfo.id)
+                //         startInfo = {}
+                //         endInfo = {}
+                //     }
+                //     mySubway.clearRoute();
+                // }
             });
 
             // 地铁图缩放
@@ -66,8 +68,15 @@
             // 点击站点，显示此站点的信息窗体
             mySubway.event.on("station.touch", function (ev, info) {
                 // console.log(info)
-                var id = info.id;
-                touchStation(id)
+                // if (info.id != startInfo.id && info.id != endInfo.id) {
+                //     stationTouchID = info.id;
+                //     touchStation(stationTouchID)
+                // }
+                touchStation(info.id)
+                console.log(stationTouchID)
+                var json_data = JSON.stringify(info);
+                console.log(json_data)
+                touchStationCallFlutter.postMessage(json_data);
             });
 
             // 点击线路名，高亮此线路
@@ -84,6 +93,12 @@
             mySubway.event.on("subway.touch", function () {
                 mySubway.clearInfoWindow();
                 mySubway.clearLine();
+                if (stationTouchID != null) {
+                    mySubway.clearMarker(stationTouchID)
+                    stationTouchID = null
+                }
+                console.log(stationTouchID)
+                // mySubway.clearOverlays()
                 clearStart();
                 clearEnd();
                 touchMapCallFlutter.postMessage("true")
@@ -119,7 +134,7 @@
         }
 
         // 设置城市编码
-        function setAdcode(city_name){
+        function setAdcode(city_name) {
             console.log(city_name)
             var adcode = adcodes[city_name]["adcode"];
             mySubway.setAdcode(adcode)
@@ -129,23 +144,29 @@
         function touchStation(id) {
             console.log(id)
             console.log(startInfo.id)
+            if (stationTouchID != null) {
+                mySubway.clearMarker(stationTouchID)
+                stationTouchID = null
+            }
+            if (id != startInfo.id && id != endInfo.id) {
+                stationTouchID = id;
+                mySubway.addMarker(id, {});
+                var center = mySubway.getStCenter(id);
+                mySubway.setCenter(center);
+            }
             // mySubway.stopAnimation();
-            if (startInfo != {} && startInfo.id == id) {
-                mySubway.clearMarker(startInfo.id)
-                startInfo = {}
-            }
-            if (endInfo != {} && endInfo.id == id) {
-                mySubway.clearMarker(endInfo.id)
-                endInfo = {}
-            }
-            mySubway.addInfoWindow(id, {});
-            var center = mySubway.getStCenter(id);
-            mySubway.setCenter(center);
         }
 
         // 设置id对应的站点为起点
         function setStartStation(id) {
             // mySubway.stopAnimation();
+            if (stationTouchID != null) {
+                mySubway.clearMarker(stationTouchID)
+                stationTouchID = null
+            }
+            if (id == endInfo.id) {
+                clearEnd()
+            }
             mySubway.clearInfoWindow();
             mySubway.setStart(id, {});
             startInfo.id = id;
@@ -159,6 +180,13 @@
         // 设置id对应的站点为终点
         function setEndStation(id) {
             // mySubway.stopAnimation();
+            if (stationTouchID != null) {
+                mySubway.clearMarker(stationTouchID)
+                stationTouchID = null
+            }
+            if (id == startInfo.id) {
+                clearStart()
+            }
             mySubway.clearInfoWindow();
             mySubway.setEnd(id, {});
             endInfo.id = id;

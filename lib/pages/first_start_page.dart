@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_pickers/style/default_style.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -659,8 +658,8 @@ class _FirstStartPageState extends State<FirstStartPage> {
       String cityStationsString =
           await rootBundle.loadString("assets/city_stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
-      if (cityStationsResult.containsKey('上海市')) {
-        _stations = cityStationsResult['上海市'].cast<String>();
+      if (cityStationsResult.containsKey(_city)) {
+        _stations = cityStationsResult[_city].cast<String>();
       }
     }
     await showDialog(

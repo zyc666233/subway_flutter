@@ -25,7 +25,7 @@ environment:
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+# versions available, run `flutter pub outdated`.image.png
 dependencies:
   flutter:
     sdk: flutter
@@ -34,13 +34,11 @@ dependencies:
   flutter_keyboard_visibility: ^5.0.0
   image_picker: ^0.8.5+3
   path_provider: ^2.0.11
-  dio: ^4.0.6
   flutter_pickers: ^2.1.9
   webview_flutter: ^3.0.4
   jaguar_flutter_asset: ^3.0.0
   video_player: ^2.4.4
   multi_select_flutter: ^4.1.2
-  expansion_tile_card: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
