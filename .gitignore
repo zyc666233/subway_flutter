@@ -68,3 +68,5 @@ doc/api/
 *.js.deps
 *.js.map
 >>>>>>> fa9065d88b00a1ea95f453cb6e108bdf98f2c730
+.vscode/settings.json
+pubspec.lock
