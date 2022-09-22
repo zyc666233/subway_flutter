@@ -94,7 +94,7 @@ class _PickStationsPageState extends State<PickStationsPage> {
     if (_city != '选择所在城市') {
       // 读取已开通地铁的城市列表
       String cityStationsString =
-          await rootBundle.loadString("assets/city_stations.json");
+          await rootBundle.loadString("assets/city-stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
       if (cityStationsResult.containsKey(_city)) {
         stationList = cityStationsResult[_city].cast<String>();

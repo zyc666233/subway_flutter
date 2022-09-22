@@ -723,7 +723,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                     child: Stack(children: [
                                       WebView(
                                         initialUrl:
-                                            "http://0.0.0.0:9998/files/html/subway_map_route.html",
+                                            "http://0.0.0.0:9998/files/html/subway-map-route.html",
                                         javascriptMode:
                                             JavascriptMode.unrestricted,
                                         javascriptChannels: {
@@ -877,7 +877,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                     child: Stack(children: [
                                       WebView(
                                         initialUrl:
-                                            "http://0.0.0.0:9998/files/html/subway_map_station.html",
+                                            "http://0.0.0.0:9998/files/html/subway-map-station.html",
                                         javascriptMode:
                                             JavascriptMode.unrestricted,
                                         javascriptChannels: {
@@ -982,7 +982,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                     child: Stack(children: [
                                       WebView(
                                         initialUrl:
-                                            "http://0.0.0.0:9998/files/html/subway_map_station.html",
+                                            "http://0.0.0.0:9998/files/html/subway-map-station.html",
                                         javascriptMode:
                                             JavascriptMode.unrestricted,
                                         javascriptChannels: {
@@ -1081,7 +1081,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                     child: Stack(children: [
                                       WebView(
                                         initialUrl:
-                                            "http://0.0.0.0:9998/files/html/subway_map_station.html",
+                                            "http://0.0.0.0:9998/files/html/subway-map-station.html",
                                         javascriptMode:
                                             JavascriptMode.unrestricted,
                                         javascriptChannels: {

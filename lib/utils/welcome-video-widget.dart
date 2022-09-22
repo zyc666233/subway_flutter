@@ -61,7 +61,7 @@ class _WelcomeVideoWidgetState extends State<WelcomeVideoWidget> {
 
   void initialization() {
     //加载视频资源
-    _controller = VideoPlayerController.asset('assets/videos/start_video.mp4')
+    _controller = VideoPlayerController.asset('assets/videos/start-video.mp4')
       ..initialize().then((_) {
         LogUtils.e("视频加载完成");
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.

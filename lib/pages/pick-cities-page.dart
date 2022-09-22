@@ -110,7 +110,7 @@ class _PickCitiesPageState extends State<PickCitiesPage> {
   void initialization() async {
     cities = [];
     String subwayCitysString =
-        await rootBundle.loadString("assets/subway_citys.json");
+        await rootBundle.loadString("assets/subway-citys.json");
     Map<String, dynamic> subwayCitysResult = jsonDecode(subwayCitysString);
     subwayCitysResult.forEach((key, value) {
       if (!cities.contains(value['name'])) {

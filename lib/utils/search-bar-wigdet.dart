@@ -139,7 +139,7 @@ class _SearchBarState extends State<SearchBar> {
     if (userCity != '') {
       // 读取已开通地铁的城市列表
       String cityStationsString =
-          await rootBundle.loadString("assets/city_stations.json");
+          await rootBundle.loadString("assets/city-stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
       if (cityStationsResult.containsKey(userCity)) {
         stationList = cityStationsResult[userCity].cast<String>();

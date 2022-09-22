@@ -387,7 +387,7 @@ class HomePageState extends State<HomePage> {
           // 地铁图
           Expanded(
               child: WebView(
-            initialUrl: "http://0.0.0.0:9998/files/html/subway_map.html",
+            initialUrl: "http://0.0.0.0:9998/files/html/subway-map.html",
             javascriptMode: JavascriptMode.unrestricted,
             javascriptChannels: {
               // 地铁图绘制完成后接收消息
@@ -556,7 +556,7 @@ class HomePageState extends State<HomePage> {
     if (userCity != '') {
       // 读取已开通地铁的城市列表
       String cityStationsString =
-          await rootBundle.loadString("assets/city_stations.json");
+          await rootBundle.loadString("assets/city-stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
       if (cityStationsResult.containsKey(userCity)) {
         stationList = cityStationsResult[userCity].cast<String>();
@@ -705,7 +705,7 @@ class HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(bottom: 20),
                       child: Image(
                           image:
-                              AssetImage("assets/images/green_triangle.png"))),
+                              AssetImage("assets/images/green-triangle.png"))),
                   title: Row(
                     children: [
                       // 乘坐的地铁线路
@@ -801,7 +801,7 @@ class HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(bottom: 20),
                       child: Image(
                           image:
-                              AssetImage("assets/images/blue_triangle.png"))),
+                              AssetImage("assets/images/blue-triangle.png"))),
                   title: Row(
                     children: [
                       // 乘坐的地铁线路
@@ -900,7 +900,7 @@ class HomePageState extends State<HomePage> {
                   leading: Container(
                       padding: EdgeInsets.only(bottom: 20),
                       child: Image(
-                          image: AssetImage("assets/images/red_triangle.png"))),
+                          image: AssetImage("assets/images/red-triangle.png"))),
                   title: Row(
                     children: [
                       // 乘坐的地铁线路
@@ -997,7 +997,7 @@ class HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(bottom: 20),
                         child: Image(
                             image: AssetImage(
-                                "assets/images/green_triangle.png"))),
+                                "assets/images/green-triangle.png"))),
                     Container(
                       child: Text("少换乘"),
                       margin: EdgeInsets.only(right: 30),
@@ -1008,7 +1008,7 @@ class HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(bottom: 20),
                         child: Image(
                             image:
-                                AssetImage("assets/images/blue_triangle.png"))),
+                                AssetImage("assets/images/blue-triangle.png"))),
                     Container(
                       child: Text("最快速"),
                       margin: EdgeInsets.only(right: 30),
@@ -1019,7 +1019,7 @@ class HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(bottom: 20),
                         child: Image(
                             image:
-                                AssetImage("assets/images/red_triangle.png"))),
+                                AssetImage("assets/images/red-triangle.png"))),
                     Container(
                       child: Text("最舒适"),
                       margin: EdgeInsets.only(right: 30),

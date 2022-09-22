@@ -514,9 +514,9 @@ class _FirstStartPageState extends State<FirstStartPage> {
     await SPUtil.init();
     // 读取已开通地铁的城市列表
     String provinceCitysString =
-        await rootBundle.loadString("assets/provinces_citys.json");
+        await rootBundle.loadString("assets/provinces-citys.json");
     String subwayCitysString =
-        await rootBundle.loadString("assets/subway_citys.json");
+        await rootBundle.loadString("assets/subway-citys.json");
     Map<String, dynamic> provinceCitysResult = jsonDecode(provinceCitysString);
     Map<String, dynamic> subwayCitysResult = jsonDecode(subwayCitysString);
     subwayCitysResult.forEach((key, value) {
@@ -657,7 +657,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
     if (_city != '选择所在城市') {
       // 读取已开通地铁的城市列表
       String cityStationsString =
-          await rootBundle.loadString("assets/city_stations.json");
+          await rootBundle.loadString("assets/city-stations.json");
       Map<String, dynamic> cityStationsResult = jsonDecode(cityStationsString);
       if (cityStationsResult.containsKey(_city)) {
         _stations = cityStationsResult[_city].cast<String>();
