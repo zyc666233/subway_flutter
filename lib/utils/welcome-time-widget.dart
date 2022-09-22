@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:subway_flutter/pages/home_page.dart';
+import 'package:subway_flutter/pages/home-page.dart';
 
-import 'log_utils.dart';
-import 'navigator_utils.dart';
+import 'log-utils.dart';
+import 'navigator-utils.dart';
 
 class WelcomeTimeWidget extends StatefulWidget {
   @override

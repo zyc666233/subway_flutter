@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../pages/first_start_page.dart';
-import '../pages/home_page.dart';
-import 'log_utils.dart';
-import 'navigator_utils.dart';
-import 'shared_preferences_utils.dart';
+import '../pages/first-start-page.dart';
+import '../pages/home-page.dart';
+import 'log-utils.dart';
+import 'navigator-utils.dart';
+import 'shared-preferences-utils.dart';
 
 //app启动视频
 class WelcomeVideoWidget extends StatefulWidget {

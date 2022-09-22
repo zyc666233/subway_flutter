@@ -6,18 +6,18 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:subway_flutter/pages/modify_info_page.dart';
-import 'package:subway_flutter/pages/pick_stations_page.dart';
-import 'package:subway_flutter/utils/expansion_tile_widget.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
-import 'package:subway_flutter/utils/search_bar_wigdet.dart';
-import 'package:subway_flutter/utils/shared_preferences_utils.dart';
+import 'package:subway_flutter/pages/modify-info_page.dart';
+import 'package:subway_flutter/pages/pick-stations-page.dart';
+import 'package:subway_flutter/utils/expansion-tile-widget.dart';
+import 'package:subway_flutter/utils/log-utils.dart';
+import 'package:subway_flutter/utils/navigator-utils.dart';
+import 'package:subway_flutter/utils/search-bar-wigdet.dart';
+import 'package:subway_flutter/utils/shared-preferences-utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_flutter_asset/jaguar_flutter_asset.dart';
 
-import 'route_result_page.dart';
+import 'route-result-page.dart';
 
 String _userName = "";
 String _userCity = "";

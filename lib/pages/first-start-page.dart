@@ -10,14 +10,14 @@ import 'package:flutter_pickers/style/default_style.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:subway_flutter/pages/home_page.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
-import 'package:subway_flutter/utils/shared_preferences_utils.dart';
+import 'package:subway_flutter/pages/home-page.dart';
+import 'package:subway_flutter/utils/log-utils.dart';
+import 'package:subway_flutter/utils/navigator-utils.dart';
+import 'package:subway_flutter/utils/shared-preferences-utils.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/picker_style.dart';
 
-import 'pick_stations_page.dart';
+import 'pick-stations-page.dart';
 
 class FirstStartPage extends StatefulWidget {
   FirstStartPage({Key? key}) : super(key: key);
@@ -697,7 +697,7 @@ class _FirstStartPageState extends State<FirstStartPage> {
             } else {
               _addFrequentStations = [];
               for (var item in values) {
-                if (!_addFrequentCities.contains(item.toString())){
+                if (!_addFrequentCities.contains(item.toString())) {
                   _addFrequentStations.add(item.toString());
                 }
               }

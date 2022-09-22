@@ -12,7 +12,7 @@
 <body>
     <div id="mybox"></div>
     <script src="../js/adcode.js"></script>
-    <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
+    <script src="https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk"></script>
     <script type="text/javascript">
         var mySubway, startInfo, endInfo;
 
@@ -38,9 +38,8 @@
             // 地铁加载完成，执行complete事件
             mySubway.event.on("subway.complete", function (ev, info) {
                 var id = info.id;
-                console.log("msyydsmsyydsmsyyds")
-                console.log(startInfo.name)
-                console.log(endInfo.name)
+                // console.log(startInfo.name)
+                // console.log(endInfo.name)
                 subwayCompleteCallFlutterRoute.postMessage("subwayCompleteSuccess");
                 subwayCompleteCallFlutterStart.postMessage("subwayCompleteSuccess");
                 subwayCompleteCallFlutterEnd.postMessage("subwayCompleteSuccess");
@@ -64,7 +63,7 @@
             // mySubway.event.on("lineName.touch", function (ev, info) {
             //     // console.log(info)
             //     mySubway.showLine(info.id);
-            //     // var select_obj = qs('#g-select');
+            //     // var select_obj = qs("#g-select");
             //     // mySubway.setFitView("mybox");
             //     var center = mySubway.getSelectedLineCenter();
             //     mySubway.setCenter(center);
@@ -106,11 +105,11 @@
         }
 
         // 设置城市编码
-        function initMap(city_name, start_station, end_station) {
-            console.log(city_name)
-            startInfo.name = start_station
-            endInfo.name = end_station
-            var adcode = adcodes[city_name]["adcode"];
+        function initMap(cityName, startStation, endStation) {
+            // console.log(city_name)
+            startInfo.name = startStation
+            endInfo.name = endStation
+            var adcode = adcodes[cityName]["adcode"];
             mySubway.setAdcode(adcode)
         }
 

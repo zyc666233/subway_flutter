@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
-import 'package:subway_flutter/pages/welcome_page.dart';
-import 'pages/home_page.dart';
+import 'package:subway_flutter/utils/log-utils.dart';
+import 'package:subway_flutter/utils/navigator-utils.dart';
+import 'package:subway_flutter/pages/welcome-page.dart';
+import 'pages/home-page.dart';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_flutter_asset/jaguar_flutter_asset.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';

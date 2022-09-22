@@ -14,12 +14,12 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../utils/log_utils.dart';
-import '../utils/navigator_utils.dart';
-import '../utils/shared_preferences_utils.dart';
-import 'home_page.dart';
-import 'pick_cities_page.dart';
-import 'pick_stations_page.dart';
+import '../utils/log-utils.dart';
+import '../utils/navigator-utils.dart';
+import '../utils/shared-preferences-utils.dart';
+import 'home-page.dart';
+import 'pick-cities-page.dart';
+import 'pick-stations-page.dart';
 
 class ModifyInfoPage extends StatefulWidget {
   ModifyInfoPage({Key? key}) : super(key: key);

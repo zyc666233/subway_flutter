@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
-import 'package:subway_flutter/utils/navigator_utils.dart';
+import 'package:subway_flutter/utils/log-utils.dart';
+import 'package:subway_flutter/utils/navigator-utils.dart';
 
 List<String> stationList = [];
 List<String> recentList = [];
@@ -107,9 +107,8 @@ class _PickStationsPageState extends State<PickStationsPage> {
 }
 
 class SearchBarDelegate extends SearchDelegate<String> {
-
   String get searchFieldLabel => "搜索站点";
-  
+
   // 搜索条右侧的按钮执行方法，在这里方法里放入一个clear图标，点击图标清空搜索的内容。
   @override
   List<Widget>? buildActions(BuildContext context) {

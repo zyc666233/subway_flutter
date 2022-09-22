@@ -12,7 +12,7 @@
 <body>
     <div id="mybox"></div>
     <script src="../js/adcode.js"></script>
-    <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
+    <script src="https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk"></script>
     <script type="text/javascript">
         var mySubway, startInfo, endInfo, stationTouchID;
         // var city = "上海市";
@@ -48,7 +48,7 @@
                 //     // console.log(json_data);
                 //     subwayCompletedCallFlutter.postMessage(json_data)
                 // });
-                // document.getElementById('select_bg').onclick = function () {
+                // document.getElementById("select_bg").onclick = function () {
                 //     if (startInfo.id && endInfo.id) {
                 //         mySubway.clearMarker(startInfo.id)
                 //         mySubway.clearMarker(endInfo.id)
@@ -73,17 +73,17 @@
                 //     touchStation(stationTouchID)
                 // }
                 touchStation(info.id)
-                console.log(stationTouchID)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                touchStationCallFlutter.postMessage(json_data);
+                // console.log(stationTouchID)
+                var jsonData = JSON.stringify(info);
+                // console.log(json_data)
+                touchStationCallFlutter.postMessage(jsonData);
             });
 
             // 点击线路名，高亮此线路
             mySubway.event.on("lineName.touch", function (ev, info) {
                 // console.log(info)
                 mySubway.showLine(info.id);
-                // var select_obj = qs('#g-select');
+                // var select_obj = qs("#g-select");
                 // mySubway.setFitView("mybox");
                 var center = mySubway.getSelectedLineCenter();
                 mySubway.setCenter(center);
@@ -97,7 +97,7 @@
                     mySubway.clearMarker(stationTouchID)
                     stationTouchID = null
                 }
-                console.log(stationTouchID)
+                // console.log(stationTouchID)
                 // mySubway.clearOverlays()
                 clearStart();
                 clearEnd();
@@ -107,17 +107,17 @@
             // 设置起点
             mySubway.event.on("startStation.touch", function (ev, info) {
                 setStartStation(info.id)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                stationBackCallFlutter.postMessage(json_data);
+                var jsonData = JSON.stringify(info);
+                // console.log(jsonData)
+                stationBackCallFlutter.postMessage(jsonData);
             });
 
             // 设置终点
             mySubway.event.on("endStation.touch", function (ev, info) {
                 setEndStation(info.id)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                stationBackCallFlutter.postMessage(json_data);
+                var jsonData = JSON.stringify(info);
+                // console.log(jsonData)
+                stationBackCallFlutter.postMessage(jsonData);
             });
 
             startInfo = {};
@@ -127,23 +127,23 @@
             mySubway.event.on("subway.routeComplete", function (ev, info) {
                 // var json_data = JSON.stringify(ev);
                 // console.log(json_data);
-                var json_data = JSON.stringify(info);
+                var jsonData = JSON.stringify(info);
                 // console.log(json_data);
-                routeCompletedCallFlutter.postMessage(json_data)
+                routeCompletedCallFlutter.postMessage(jsonData)
             });
         }
 
         // 设置城市编码
-        function setAdcode(city_name) {
-            console.log(city_name)
-            var adcode = adcodes[city_name]["adcode"];
+        function setAdcode(cityName) {
+            // console.log(cityName)
+            var adcode = adcodes[cityName]["adcode"];
             mySubway.setAdcode(adcode)
         }
 
         // 根据id显示站点的信息窗体
         function touchStation(id) {
-            console.log(id)
-            console.log(startInfo.id)
+            // console.log(id)
+            // console.log(startInfo.id)
             if (stationTouchID != null) {
                 mySubway.clearMarker(stationTouchID)
                 stationTouchID = null
@@ -219,27 +219,27 @@
                 mySubway.route(startInfo.id, endInfo.id, {
                     closeBtn: true
                 });
-                console.log(startInfo.id);
-                console.log(endInfo.id);
+                // console.log(startInfo.id);
+                // console.log(endInfo.id);
             }
         }
 
         // 清除路线规划结果
         function clearRoute() {
             mySubway.clearRoute();
-            console.log(startInfo.id);
-            console.log(endInfo.id);
+            // console.log(startInfo.id);
+            // console.log(endInfo.id);
         }
 
         // 根据站点名获取站点信息
         function searchStation(name) {
-            var station_list
+            var stationList
             mySubway.stationSearch(name, function (list) {
-                var json_data = JSON.stringify(list);
+                var jsonData = JSON.stringify(list);
                 // console.log(json_data);
-                station_list = json_data
+                stationList = jsonData
             })
-            return station_list
+            return stationList
         }
 
     </script>

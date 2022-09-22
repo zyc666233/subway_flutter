@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../utils/expansion_tile_widget.dart';
-import '../utils/keep_alive_wrapper.dart';
-import '../utils/log_utils.dart';
+import '../utils/expansion-tile-widget.dart';
+import '../utils/keep-alive-wrapper.dart';
+import '../utils/log-utils.dart';
 
 class RouteResultPage extends StatefulWidget {
   final Map<String, dynamic> routeResult;
@@ -735,7 +735,8 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                 if (msg.message ==
                                                     "subwayCompleteSuccess") {
                                                   _webViewControllerList[index]
-                                                      ?.runJavascript("route()");
+                                                      ?.runJavascript(
+                                                          "route()");
                                                 }
                                               }),
                                           JavascriptChannel(
@@ -777,8 +778,10 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               height: 40,
                                               child: ListView.separated(
                                                 shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: segmentlist.length + 1,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    segmentlist.length + 1,
                                                 itemBuilder:
                                                     (BuildContext context,
                                                         int index) {
@@ -796,8 +799,8 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                             .toString();
                                                     if (hexColorString.length ==
                                                         6) {
-                                                      hexColorString =
-                                                          "0xFF" + hexColorString;
+                                                      hexColorString = "0xFF" +
+                                                          hexColorString;
                                                     }
                                                     return CircleAvatar(
                                                       backgroundColor: Color(
@@ -807,7 +810,8 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       child: Text(
                                                         lineID,
                                                         style: TextStyle(
-                                                            color: Colors.white),
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                     );
                                                   } else {

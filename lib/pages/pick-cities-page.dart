@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../utils/shared_preferences_utils.dart';
+import '../utils/shared-preferences-utils.dart';
 
 List<String> cities = [];
 List<String> recentList = [];
@@ -70,7 +70,10 @@ class _PickCitiesPageState extends State<PickCitiesPage> {
                             width: 0.8, color: Colors.grey.shade400))),
                 child: ListTile(
                   style: ListTileStyle.list,
-                  leading: Icon(Icons.star, color: Colors.grey[800],),
+                  leading: Icon(
+                    Icons.star,
+                    color: Colors.grey[800],
+                  ),
                   title: Text(
                     addFrequentCities[index],
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -124,7 +127,6 @@ class _PickCitiesPageState extends State<PickCitiesPage> {
 }
 
 class SearchBarDelegate extends SearchDelegate<String> {
-
   String get searchFieldLabel => "搜索城市";
 
   // 搜索条右侧的按钮执行方法，在这里方法里放入一个clear图标，点击图标清空搜索的内容。

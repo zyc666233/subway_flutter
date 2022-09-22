@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:subway_flutter/utils/log_utils.dart';
+import 'package:subway_flutter/utils/log-utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'shared_preferences_utils.dart';
+import 'shared-preferences-utils.dart';
 
 List<String> stationList = [];
 List<String> recentList = [];
@@ -36,8 +36,8 @@ class SearchBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SearchBar> createState() =>
-      _SearchBarState(this.hintText, this.webViewController, this.stationCallBack);
+  State<SearchBar> createState() => _SearchBarState(
+      this.hintText, this.webViewController, this.stationCallBack);
 }
 
 class _SearchBarState extends State<SearchBar> {

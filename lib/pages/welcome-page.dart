@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:subway_flutter/utils/welcome_time_widget.dart';
-import 'package:subway_flutter/utils/welcome_video_widget.dart';
+import 'package:subway_flutter/utils/welcome-time-widget.dart';
+import 'package:subway_flutter/utils/welcome-video-widget.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key? key}) : super(key: key);
