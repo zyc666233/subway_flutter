@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:subway_flutter/pages/modify_info_page.dart';
 import 'package:subway_flutter/pages/pick_stations_page.dart';
@@ -58,6 +59,10 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    LogUtils.e('设备高度：${ScreenUtil().screenHeight}');
+    LogUtils.e('设备宽度：${ScreenUtil().screenWidth}');
+    LogUtils.e('实际高度与设计稿高度的比例：${ScreenUtil().scaleHeight}');
+    LogUtils.e('实际宽度与设计稿宽度的比例：${ScreenUtil().scaleWidth}');
     initialization();
   }
 
@@ -79,29 +84,30 @@ class HomePageState extends State<HomePage> {
             // 所在城市
             accountEmail: Text(
               "所在城市：${_userCity}",
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 12.sp),
             ),
             // 用户名
             accountName: Text(
               _userName,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16.sp),
             ),
             // 编辑按钮
             otherAccountsPictures: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 1, right: 1, top: 9, bottom: 9),
+                padding: EdgeInsets.only(
+                    left: 1.w, right: 1.w, top: 9.h, bottom: 9.h),
                 child: TextButton(
                     style: ButtonStyle(
                       //圆角
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6))),
+                          borderRadius: BorderRadius.circular(6.r))),
                       backgroundColor:
                           MaterialStateProperty.all(Colors.grey[100]),
                       // minimumSize: MaterialStateProperty.all(Size(1, 2)),
                       padding: MaterialStateProperty.all(EdgeInsets.only(
-                          left: 2, right: 2, top: 1, bottom: 1)),
+                          left: 2.w, right: 2.w, top: 1.h, bottom: 1.h)),
                       textStyle:
-                          MaterialStateProperty.all(TextStyle(fontSize: 12)),
+                          MaterialStateProperty.all(TextStyle(fontSize: 12.sp)),
                       // side: MaterialStateProperty.all(
                       //     BorderSide(color: Colors.white)),
                     ),
@@ -115,20 +121,20 @@ class HomePageState extends State<HomePage> {
           ),
           // 显示的站点列表
           Container(
-            padding: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.only(bottom: 5.h),
             decoration: BoxDecoration(
                 border: Border(
                     bottom:
-                        BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                        BorderSide(width: 0.8.w, color: Colors.grey.shade400))),
             child: ListTile(
               leading: CircleAvatar(child: Icon(Icons.home)),
               title: Text(
                 _userHome,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18.sp),
               ),
               trailing: Text(
                 "步行时长：${_walkHomeTime}",
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15.sp),
               ),
               onTap: () {
                 if (_departureStation == "出发站点" || _reachStation == "到达站点") {
@@ -138,20 +144,20 @@ class HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(top: 5, bottom: 5),
+            padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
             decoration: BoxDecoration(
                 border: Border(
                     bottom:
-                        BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                        BorderSide(width: 0.8.w, color: Colors.grey.shade400))),
             child: ListTile(
               leading: CircleAvatar(child: Icon(Icons.business)),
               title: Text(
                 _userCompany,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18.sp),
               ),
               trailing: Text(
                 "步行时长：${_walkCompanyTime}",
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15.sp),
               ),
               onTap: () {
                 if (_departureStation == "出发站点" || _reachStation == "到达站点") {
@@ -165,7 +171,7 @@ class HomePageState extends State<HomePage> {
               context: context,
               removeTop: true,
               child: Container(
-                padding: EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8.w),
                 child: ListView.builder(
                     // shrinkWrap: true,
                     itemCount: _addFrequentStations.length,
@@ -175,13 +181,14 @@ class HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
-                                    width: 0.8, color: Colors.grey.shade400))),
+                                    width: 0.8.w,
+                                    color: Colors.grey.shade400))),
                         child: ListTile(
                           style: ListTileStyle.list,
                           leading: Icon(Icons.subway),
                           title: Text(
                             _addFrequentStations[index],
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18.sp),
                           ),
                           onTap: () {
                             if (_departureStation == "出发站点" ||
@@ -207,18 +214,18 @@ class HomePageState extends State<HomePage> {
                   color: Color.fromARGB(255, 245, 245, 245),
                   width: 0.0), //灰色的一层边框
               color: Color.fromARGB(255, 240, 240, 240),
-              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.all(Radius.circular(20.r)),
             ),
-            padding: const EdgeInsets.fromLTRB(10, 40, 20, 10),
+            padding: EdgeInsets.fromLTRB(10.w, 40.h, 20.w, 10.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   flex: 1,
                   child: IconButton(
-                    padding: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(0.r),
                     icon: Icon(Icons.person),
-                    iconSize: 40,
+                    iconSize: 40.r,
                     onPressed: () {
                       if (!_scaffoldkey.currentState!.isDrawerOpen) {
                         _scaffoldkey.currentState?.openDrawer();
@@ -226,7 +233,7 @@ class HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
-                SizedBox(width: 15),
+                SizedBox(width: 15.w),
                 Expanded(
                   flex: 9,
                   child: Column(
@@ -234,15 +241,15 @@ class HomePageState extends State<HomePage> {
                       Container(
                         decoration: new BoxDecoration(
                           border: Border.all(
-                              color: Colors.grey, width: 0.0), //灰色的一层边框
+                              color: Colors.grey, width: 0.0.w), //灰色的一层边框
                           color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                          borderRadius: BorderRadius.all(Radius.circular(0.r)),
                         ),
                         alignment: Alignment.center,
                         // width: 100,
-                        height: 40,
+                        height: 40.h,
                         // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
-                        padding: EdgeInsets.only(left: 6, right: 6),
+                        padding: EdgeInsets.only(left: 6.w, right: 6.w),
                         child: Row(
                           children: [
                             Expanded(
@@ -257,7 +264,7 @@ class HomePageState extends State<HomePage> {
                                   child: Text(
                                     _departureStation,
                                     style: TextStyle(
-                                        fontSize: 16, color: textColorStart),
+                                        fontSize: 16.sp, color: textColorStart),
                                   ),
                                   onTap: () async {
                                     //这里是跳转搜索界面的关键
@@ -300,15 +307,15 @@ class HomePageState extends State<HomePage> {
                       Container(
                         decoration: new BoxDecoration(
                           border: Border.all(
-                              color: Colors.grey, width: 0.0), //灰色的一层边框
+                              color: Colors.grey, width: 0.0.w), //灰色的一层边框
                           color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                          borderRadius: BorderRadius.all(Radius.circular(0.r)),
                         ),
                         alignment: Alignment.center,
                         // width: 100,
-                        height: 40,
+                        height: 40.h,
                         // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
-                        padding: EdgeInsets.only(left: 6, right: 6),
+                        padding: EdgeInsets.only(left: 6.w, right: 6.w),
                         child: Row(
                           children: [
                             Expanded(
@@ -323,7 +330,7 @@ class HomePageState extends State<HomePage> {
                                   child: Text(
                                     _reachStation,
                                     style: TextStyle(
-                                        fontSize: 16, color: textColorEnd),
+                                        fontSize: 16.sp, color: textColorEnd),
                                   ),
                                   onTap: () async {
                                     //这里是跳转搜索界面的关键
@@ -647,7 +654,8 @@ class HomePageState extends State<HomePage> {
       //自定义底部弹窗布局
       shape: new RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            topLeft: Radius.circular(20.0.r),
+            topRight: Radius.circular(20.0.r)),
       ),
       builder: (BuildContext context) {
         return Container(
@@ -660,20 +668,20 @@ class HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                            width: 0.8, color: Colors.grey.shade400))),
+                            width: 0.8.w, color: Colors.grey.shade400))),
                 child: ListTile(
                   title: Text(
                     "查询结果",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20.sp),
                     textAlign: TextAlign.center,
                   ),
                   trailing: IconButton(
-                    padding: EdgeInsets.only(bottom: 1),
+                    padding: EdgeInsets.only(bottom: 1.h),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                     icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 40,
+                    iconSize: 40.r,
                   ),
                   leading: IconButton(
                     onPressed: null,
@@ -681,28 +689,28 @@ class HomePageState extends State<HomePage> {
                       Icons.arrow_drop_down,
                       color: Colors.transparent,
                     ),
-                    iconSize: 35,
+                    iconSize: 35.r,
                   ),
                 ),
               ),
               // 起点站和终点站的提示信息栏
               Container(
-                padding: EdgeInsets.only(left: 20),
-                margin: EdgeInsets.only(bottom: 20, top: 15),
+                padding: EdgeInsets.only(left: 20.w),
+                margin: EdgeInsets.only(bottom: 20.h, top: 15.h),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "从 $_departureStation 至 $_reachStation",
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16.sp),
                   textAlign: TextAlign.start,
                 ),
               ),
               // 最便宜策略结果展示栏
               Container(
-                margin: EdgeInsets.only(bottom: 15),
+                margin: EdgeInsets.only(bottom: 15.h),
                 child: ListTile(
-                  horizontalTitleGap: 0,
+                  horizontalTitleGap: 0.w,
                   leading: Container(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(bottom: 20.h),
                       child: Image(
                           image:
                               AssetImage("assets/images/green_triangle.png"))),
@@ -712,7 +720,7 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                           flex: 11,
                           child: Container(
-                            height: 40,
+                            height: 40.h,
                             child: ListView.separated(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
@@ -731,7 +739,7 @@ class HomePageState extends State<HomePage> {
                                 return CircleAvatar(
                                   backgroundColor:
                                       Color(int.parse(hexColorString)),
-                                  radius: 15,
+                                  radius: 15.r,
                                   child: Text(
                                     lineID,
                                     style: TextStyle(color: Colors.white),
@@ -741,10 +749,11 @@ class HomePageState extends State<HomePage> {
                               separatorBuilder:
                                   (BuildContext context, int index) {
                                 return Container(
-                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  margin:
+                                      EdgeInsets.only(left: 5.w, right: 5.w),
                                   child: Icon(
                                     Icons.arrow_forward,
-                                    size: 15,
+                                    size: 15.r,
                                   ),
                                 );
                               },
@@ -758,23 +767,23 @@ class HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(
                                         children: [Text(expense), Text("元")])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(totalStations.toString()),
                                       Text("站")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(transitTimes.toString()),
                                       Text("换")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text((int.parse(expensetime) ~/ 60 + 1)
                                           .toString()),
@@ -786,7 +795,7 @@ class HomePageState extends State<HomePage> {
                     ],
                   ),
                   trailing: IconButton(
-                      iconSize: 35,
+                      iconSize: 35.r,
                       onPressed: () =>
                           goToRouteResultPage(routeResult, "最少换乘", _userCity),
                       icon: Icon(Icons.navigate_next)),
@@ -794,11 +803,11 @@ class HomePageState extends State<HomePage> {
               ),
               // 最快速策略结果展示栏
               Container(
-                margin: EdgeInsets.only(bottom: 15),
+                margin: EdgeInsets.only(bottom: 15.h),
                 child: ListTile(
-                  horizontalTitleGap: 0,
+                  horizontalTitleGap: 0.w,
                   leading: Container(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(bottom: 20.h),
                       child: Image(
                           image:
                               AssetImage("assets/images/blue_triangle.png"))),
@@ -808,7 +817,7 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                           flex: 11,
                           child: Container(
-                            height: 40,
+                            height: 40.h,
                             child: ListView.separated(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
@@ -827,7 +836,7 @@ class HomePageState extends State<HomePage> {
                                 return CircleAvatar(
                                   backgroundColor:
                                       Color(int.parse(hexColorString)),
-                                  radius: 15,
+                                  radius: 15.r,
                                   child: Text(
                                     lineID,
                                     style: TextStyle(color: Colors.white),
@@ -837,10 +846,11 @@ class HomePageState extends State<HomePage> {
                               separatorBuilder:
                                   (BuildContext context, int index) {
                                 return Container(
-                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  margin:
+                                      EdgeInsets.only(left: 5.w, right: 5.w),
                                   child: Icon(
                                     Icons.arrow_forward,
-                                    size: 15,
+                                    size: 15.r,
                                   ),
                                 );
                               },
@@ -854,23 +864,23 @@ class HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(
                                         children: [Text(expense), Text("元")])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(totalStations.toString()),
                                       Text("站")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(transitTimes.toString()),
                                       Text("换")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text((int.parse(expensetime) ~/ 60 + 1)
                                           .toString()),
@@ -882,7 +892,7 @@ class HomePageState extends State<HomePage> {
                     ],
                   ),
                   trailing: IconButton(
-                      iconSize: 35,
+                      iconSize: 35.r,
                       onPressed: () =>
                           goToRouteResultPage(routeResult, "最快速", _userCity),
                       icon: Icon(Icons.navigate_next)),
@@ -893,12 +903,12 @@ class HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
-                            width: 0.8, color: Colors.grey.shade400))),
-                margin: EdgeInsets.only(bottom: 15),
+                            width: 0.8.w, color: Colors.grey.shade400))),
+                margin: EdgeInsets.only(bottom: 15.h),
                 child: ListTile(
-                  horizontalTitleGap: 0,
+                  horizontalTitleGap: 0.w,
                   leading: Container(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(bottom: 20.h),
                       child: Image(
                           image: AssetImage("assets/images/red_triangle.png"))),
                   title: Row(
@@ -907,7 +917,7 @@ class HomePageState extends State<HomePage> {
                       Expanded(
                           flex: 11,
                           child: Container(
-                            height: 40,
+                            height: 40.h,
                             child: ListView.separated(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
@@ -926,7 +936,7 @@ class HomePageState extends State<HomePage> {
                                 return CircleAvatar(
                                   backgroundColor:
                                       Color(int.parse(hexColorString)),
-                                  radius: 15,
+                                  radius: 15.r,
                                   child: Text(
                                     lineID,
                                     style: TextStyle(color: Colors.white),
@@ -936,10 +946,11 @@ class HomePageState extends State<HomePage> {
                               separatorBuilder:
                                   (BuildContext context, int index) {
                                 return Container(
-                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  margin:
+                                      EdgeInsets.only(left: 5.w, right: 5.w),
                                   child: Icon(
                                     Icons.arrow_forward,
-                                    size: 15,
+                                    size: 15.r,
                                   ),
                                 );
                               },
@@ -953,23 +964,23 @@ class HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(
                                         children: [Text(expense), Text("元")])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(totalStations.toString()),
                                       Text("站")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text(transitTimes.toString()),
                                       Text("换")
                                     ])),
                                 Container(
-                                    margin: EdgeInsets.only(left: 10),
+                                    margin: EdgeInsets.only(left: 10.w),
                                     child: Column(children: [
                                       Text((int.parse(expensetime) ~/ 60 + 1)
                                           .toString()),
@@ -981,7 +992,7 @@ class HomePageState extends State<HomePage> {
                     ],
                   ),
                   trailing: IconButton(
-                      iconSize: 35,
+                      iconSize: 35.r,
                       onPressed: () =>
                           goToRouteResultPage(routeResult, "最舒适", _userCity),
                       icon: Icon(Icons.navigate_next)),
@@ -989,41 +1000,41 @@ class HomePageState extends State<HomePage> {
               ),
               // 颜色与对应策略的提示信息
               Container(
-                padding: EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: 20.w),
                 child: Row(
                   children: [
                     Container(
-                        height: 40,
-                        padding: EdgeInsets.only(bottom: 20),
+                        height: 40.h,
+                        padding: EdgeInsets.only(bottom: 20.h),
                         child: Image(
                             image: AssetImage(
                                 "assets/images/green_triangle.png"))),
                     Container(
                       child: Text("少换乘"),
-                      margin: EdgeInsets.only(right: 30),
-                      padding: EdgeInsets.only(bottom: 20),
+                      margin: EdgeInsets.only(right: 30.w),
+                      padding: EdgeInsets.only(bottom: 20.h),
                     ),
                     Container(
-                        height: 40,
-                        padding: EdgeInsets.only(bottom: 20),
+                        height: 40.h,
+                        padding: EdgeInsets.only(bottom: 20.h),
                         child: Image(
                             image:
                                 AssetImage("assets/images/blue_triangle.png"))),
                     Container(
                       child: Text("最快速"),
-                      margin: EdgeInsets.only(right: 30),
-                      padding: EdgeInsets.only(bottom: 20),
+                      margin: EdgeInsets.only(right: 30.w),
+                      padding: EdgeInsets.only(bottom: 20.h),
                     ),
                     Container(
-                        height: 40,
-                        padding: EdgeInsets.only(bottom: 20),
+                        height: 40.h,
+                        padding: EdgeInsets.only(bottom: 20.h),
                         child: Image(
                             image:
                                 AssetImage("assets/images/red_triangle.png"))),
                     Container(
                       child: Text("最舒适"),
-                      margin: EdgeInsets.only(right: 30),
-                      padding: EdgeInsets.only(bottom: 20),
+                      margin: EdgeInsets.only(right: 30.w),
+                      padding: EdgeInsets.only(bottom: 20.h),
                     ),
                   ],
                 ),
@@ -1056,17 +1067,18 @@ class HomePageState extends State<HomePage> {
         hexColorString = "0xFF" + hexColorString;
       }
       referLinesList.add(Container(
-        padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-        margin: EdgeInsets.only(right: 10),
+        padding:
+            EdgeInsets.only(left: 10.w, right: 10.w, top: 3.h, bottom: 3.h),
+        margin: EdgeInsets.only(right: 10.r),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(12.r)),
             border: Border.all(color: Colors.black),
             color: Color(
               int.parse(hexColorString),
             )),
         child: Text(
           referLines[i]["name"],
-          style: TextStyle(color: Colors.white, fontSize: 15),
+          style: TextStyle(color: Colors.white, fontSize: 15.sp),
         ),
       ));
     }
@@ -1078,7 +1090,8 @@ class HomePageState extends State<HomePage> {
       //自定义底部弹窗布局
       shape: new RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            topLeft: Radius.circular(20.0.r),
+            topRight: Radius.circular(20.0.r)),
       ),
       builder: (BuildContext context) {
         return Container(
@@ -1104,34 +1117,37 @@ class HomePageState extends State<HomePage> {
               allowVerticalDrag: true,
               title: Container(
                   // padding: EdgeInsets.only(left: 20),
-                  margin: EdgeInsets.only(bottom: 20, top: 20),
+                  margin: EdgeInsets.only(bottom: 20.h, top: 20.h),
                   alignment: Alignment.center,
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 10),
-                    horizontalTitleGap: 10,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 10.w),
+                    horizontalTitleGap: 10.w,
                     // 设为起点和终点的按钮
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 5),
+                          margin: EdgeInsets.only(right: 5.w),
                           child: TextButton(
                               style: ButtonStyle(
                                 //圆角
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(15))),
+                                            BorderRadius.circular(15.r))),
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.lightBlue),
                                 minimumSize:
-                                    MaterialStateProperty.all(Size(1, 2)),
+                                    MaterialStateProperty.all(Size(1.w, 2.h)),
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.only(
-                                        left: 5, right: 5, top: 5, bottom: 5)),
+                                        left: 5.w,
+                                        right: 5.w,
+                                        top: 5.h,
+                                        bottom: 5.h)),
                                 textStyle: MaterialStateProperty.all(
-                                    TextStyle(fontSize: 10)),
+                                    TextStyle(fontSize: 10.sp)),
                                 side: MaterialStateProperty.all(
                                     BorderSide(color: Colors.black)),
                               ),
@@ -1161,16 +1177,19 @@ class HomePageState extends State<HomePage> {
                                 shape: MaterialStateProperty.all(
                                     RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(15))),
+                                            BorderRadius.circular(15.r))),
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.pink[200]),
                                 minimumSize:
-                                    MaterialStateProperty.all(Size(1, 2)),
+                                    MaterialStateProperty.all(Size(1.w, 2.h)),
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.only(
-                                        left: 5, right: 5, top: 5, bottom: 5)),
+                                        left: 5.w,
+                                        right: 5.w,
+                                        top: 5.h,
+                                        bottom: 5.h)),
                                 textStyle: MaterialStateProperty.all(
-                                    TextStyle(fontSize: 10)),
+                                    TextStyle(fontSize: 10.sp)),
                                 side: MaterialStateProperty.all(
                                     BorderSide(color: Colors.black)),
                               ),
@@ -1195,7 +1214,7 @@ class HomePageState extends State<HomePage> {
                     ),
                     // 站点名和所经过的线路
                     title: Container(
-                      padding: EdgeInsets.only(right: 6),
+                      padding: EdgeInsets.only(right: 6.w),
                       decoration: BoxDecoration(
                           border: Border(
                               right: BorderSide(
@@ -1205,10 +1224,10 @@ class HomePageState extends State<HomePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                              padding: EdgeInsets.only(bottom: 5),
+                              padding: EdgeInsets.only(bottom: 5.h),
                               child: Text(
                                 stationName,
-                                style: TextStyle(fontSize: 25),
+                                style: TextStyle(fontSize: 25.sp),
                               )),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -1226,14 +1245,14 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.grey))),
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 20),
-                    horizontalTitleGap: 20,
-                    minLeadingWidth: 0,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
+                    horizontalTitleGap: 20.w,
+                    minLeadingWidth: 0.w,
                     leading: Icon(Icons.wifi),
                     title: Text(
                       "车站信息",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
@@ -1245,14 +1264,14 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.grey))),
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 20),
-                    horizontalTitleGap: 20,
-                    minLeadingWidth: 0,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
+                    horizontalTitleGap: 20.w,
+                    minLeadingWidth: 0.w,
                     leading: Icon(Icons.wifi),
                     title: Text(
                       "首末班车时刻表",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
@@ -1264,14 +1283,14 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.grey))),
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 20),
-                    horizontalTitleGap: 20,
-                    minLeadingWidth: 0,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
+                    horizontalTitleGap: 20.w,
+                    minLeadingWidth: 0.w,
                     leading: Icon(Icons.wifi),
                     title: Text(
                       "车站设施",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
@@ -1283,14 +1302,14 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.grey))),
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 20),
-                    horizontalTitleGap: 20,
-                    minLeadingWidth: 0,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
+                    horizontalTitleGap: 20.w,
+                    minLeadingWidth: 0.w,
                     leading: Icon(Icons.wifi),
                     title: Text(
                       "车站可达性",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
@@ -1302,14 +1321,14 @@ class HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.grey))),
                   child: ListTile(
-                    minVerticalPadding: 0,
-                    contentPadding: EdgeInsets.only(left: 20, right: 20),
-                    horizontalTitleGap: 20,
-                    minLeadingWidth: 0,
+                    minVerticalPadding: 0.h,
+                    contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
+                    horizontalTitleGap: 20.w,
+                    minLeadingWidth: 0.w,
                     leading: Icon(Icons.wifi),
                     title: Text(
                       "车站地图",
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.arrow_forward_ios),
@@ -1372,11 +1391,12 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text: query,
-                            style: TextStyle(color: Colors.black, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 18.sp))
                       ]),
                 ),
                 onTap: () {
@@ -1388,7 +1408,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
         : Center(
             child: Text(
               "没有搜索到此站点",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18.sp),
             ),
           );
   }
@@ -1415,8 +1435,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -1425,7 +1445,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -1439,8 +1460,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -1449,7 +1470,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -1461,8 +1483,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -1471,7 +1493,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -1483,8 +1506,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 leading: Icon(Icons.subway),
                 title: RichText(
@@ -1494,12 +1517,13 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text:
                                 suggestionsList[index].substring(query.length),
-                            style: TextStyle(color: Colors.grey, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 18.sp))
                       ]),
                 ),
               ),

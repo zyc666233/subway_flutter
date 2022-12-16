@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:subway_flutter/utils/log_utils.dart';
 import 'package:subway_flutter/utils/navigator_utils.dart';
@@ -34,21 +35,21 @@ class _PickStationsPageState extends State<PickStationsPage> {
           iconTheme: IconThemeData(color: Colors.grey),
           backgroundColor: Colors.white,
           title: Container(
-            height: 35,
-            width: MediaQuery.of(context).size.width - 120,
+            height: 35.h,
+            width: MediaQuery.of(context).size.width.w - 120.w,
             decoration: BoxDecoration(
                 color: Color.fromRGBO(230, 230, 230, 1.0),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(20.r)),
             child: InkWell(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
                       child: Icon(Icons.search, color: Colors.grey)),
                   Text(
                     "点我进行搜索",
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                    style: TextStyle(color: Colors.grey, fontSize: 15.sp),
                   )
                 ],
               ),
@@ -71,13 +72,13 @@ class _PickStationsPageState extends State<PickStationsPage> {
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                              width: 0.8, color: Colors.grey.shade400))),
+                              width: 0.8.w, color: Colors.grey.shade400))),
                   child: ListTile(
                     style: ListTileStyle.list,
                     leading: Icon(Icons.subway),
                     title: Text(
                       stationList[index],
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                     ),
                     onTap: () {
                       Navigator.of(context).pop(stationList[index]);
@@ -107,9 +108,8 @@ class _PickStationsPageState extends State<PickStationsPage> {
 }
 
 class SearchBarDelegate extends SearchDelegate<String> {
-
   String get searchFieldLabel => "搜索站点";
-  
+
   // 搜索条右侧的按钮执行方法，在这里方法里放入一个clear图标，点击图标清空搜索的内容。
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -152,11 +152,12 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text: query,
-                            style: TextStyle(color: Colors.black, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 18.sp))
                       ]),
                 ),
                 onTap: () {
@@ -174,7 +175,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
         : Center(
             child: Text(
               "没有搜索到此站点",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18.sp),
             ),
           );
   }
@@ -194,8 +195,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 leading: Icon(Icons.subway),
                 title: RichText(
@@ -205,12 +206,13 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text:
                                 suggestionsList[index].substring(query.length),
-                            style: TextStyle(color: Colors.grey, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 18.sp))
                       ]),
                 ),
               ),

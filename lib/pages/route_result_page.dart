@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../utils/expansion_tile_widget.dart';
@@ -33,8 +34,8 @@ class _RouteResultPageState extends State<RouteResultPage>
   late int transitTimes;
   late int totalStations;
   List<Widget> arrow_icon_list = [];
-  TextStyle bigTextStyle = TextStyle(fontSize: 40);
-  TextStyle smallTextStyle = TextStyle(fontSize: 20);
+  TextStyle bigTextStyle = TextStyle(fontSize: 35.sp);
+  TextStyle smallTextStyle = TextStyle(fontSize: 20.sp);
   late TextStyle luxian_style;
   late TextStyle ditu_style;
   late TabController tabBarViewController;
@@ -93,7 +94,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                   border: Border(
                 bottom: BorderSide(color: Colors.grey),
               )),
-              padding: EdgeInsets.only(top: 45),
+              padding: EdgeInsets.only(top: 45.h),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: IconButton(
@@ -106,7 +107,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                 title: Text(
                   "$plan方案详情",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey[800], fontSize: 22),
+                  style: TextStyle(color: Colors.grey[800], fontSize: 22.sp),
                 ),
                 trailing: IconButton(
                     color: Colors.transparent,
@@ -119,7 +120,8 @@ class _RouteResultPageState extends State<RouteResultPage>
             ),
             // 路线和地图选项卡
             Container(
-              margin: EdgeInsets.only(top: 20, left: 35, right: 15),
+              margin: EdgeInsets.only(
+                  top: 20.h, left: 35.w, right: 15.w, bottom: 10.h),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -140,10 +142,10 @@ class _RouteResultPageState extends State<RouteResultPage>
                       });
                     },
                     child: Container(
-                      height: 60,
-                      width: 100,
+                      height: 60.h,
+                      width: 100.w,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(bottom: 10),
+                      margin: EdgeInsets.only(bottom: 10.h),
                       child: Text(
                         "路线",
                         style: luxian_style,
@@ -169,9 +171,9 @@ class _RouteResultPageState extends State<RouteResultPage>
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(bottom: 10),
-                      height: 60,
-                      width: 100,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      height: 60.h,
+                      width: 100.w,
                       child: Text(
                         "地图",
                         style: ditu_style,
@@ -184,7 +186,7 @@ class _RouteResultPageState extends State<RouteResultPage>
             // 滑动页面
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+                margin: EdgeInsets.only(left: 15.w, right: 15.w, bottom: 20.h),
                 child: PageView(
                     physics: NeverScrollableScrollPhysics(),
                     controller: pageViewController,
@@ -195,37 +197,37 @@ class _RouteResultPageState extends State<RouteResultPage>
                           children: [
                             // 全程站点总数和时长
                             Container(
-                              margin: EdgeInsets.only(left: 20, bottom: 10),
+                              margin: EdgeInsets.only(left: 20.w, bottom: 10.h),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(left: 40),
+                                    margin: EdgeInsets.only(left: 40.w),
                                     child: Column(
                                       children: [
                                         Text(
                                           totalStations.toString(),
-                                          style: TextStyle(fontSize: 20),
+                                          style: TextStyle(fontSize: 20.sp),
                                         ),
                                         Text(
                                           "站",
-                                          style: TextStyle(fontSize: 15),
+                                          style: TextStyle(fontSize: 15.sp),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 40),
+                                    margin: EdgeInsets.only(left: 40.w),
                                     child: Column(
                                       children: [
                                         Text(
                                           (int.parse(expensetime) ~/ 60 + 1)
                                               .toString(),
-                                          style: TextStyle(fontSize: 20),
+                                          style: TextStyle(fontSize: 20.sp),
                                         ),
                                         Text(
                                           "分",
-                                          style: TextStyle(fontSize: 15),
+                                          style: TextStyle(fontSize: 15.sp),
                                         ),
                                       ],
                                     ),
@@ -237,7 +239,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                             Container(
                               child: Expanded(
                                 child: ListView.builder(
-                                    padding: EdgeInsets.only(left: 25),
+                                    padding: EdgeInsets.only(left: 25.w),
                                     itemCount: (transitTimes) * 3 + 4,
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -255,15 +257,15 @@ class _RouteResultPageState extends State<RouteResultPage>
                                             children: [
                                               // 实现左侧颜色条效果，顶部半圆矩形块
                                               Container(
-                                                width: 20,
-                                                height: 30,
+                                                width: 20.sp,
+                                                height: 30.sp,
                                                 child: Stack(
                                                   alignment:
                                                       Alignment.topCenter,
                                                   children: [
                                                     // 第一层，矩形
                                                     Positioned(
-                                                        top: 15,
+                                                        top: 15.sp,
                                                         child: Container(
                                                           decoration:
                                                               BoxDecoration(
@@ -271,27 +273,27 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                                 hexColorString)),
                                                             border: Border(
                                                                 top: BorderSide(
-                                                                    width: 0,
+                                                                    width: 0.sp,
                                                                     color: Color(
                                                                         int.parse(
                                                                             hexColorString))),
                                                                 bottom: BorderSide(
-                                                                    width: 0,
+                                                                    width: 0.sp,
                                                                     color: Color(
                                                                         int.parse(
                                                                             hexColorString)))),
                                                           ),
-                                                          width: 20,
-                                                          height: 15,
+                                                          width: 20.sp,
+                                                          height: 15.sp,
                                                         )),
                                                     // 第二层，圆形
                                                     Positioned(
-                                                      top: 5,
+                                                      top: 5.sp,
                                                       child: CircleAvatar(
                                                         backgroundColor: Color(
                                                             int.parse(
                                                                 hexColorString)),
-                                                        radius: 10,
+                                                        radius: 10.sp,
                                                       ),
                                                     )
                                                   ],
@@ -299,13 +301,14 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               ),
                                               // 站点名称
                                               Container(
+                                                height: 30.sp,
                                                 padding:
-                                                    EdgeInsets.only(left: 10),
+                                                    EdgeInsets.only(left: 10.w),
                                                 child: Text(
                                                   segmentlist[index ~/ 3]
                                                       ["startname"],
-                                                  style:
-                                                      TextStyle(fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize: 20.sp),
                                                 ),
                                               )
                                             ]);
@@ -333,42 +336,42 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       hexColorString)),
                                                   border: Border(
                                                       top: BorderSide(
-                                                          width: 0,
+                                                          width: 0.sp,
                                                           color: Color(int.parse(
                                                               hexColorString))),
                                                       bottom: BorderSide(
-                                                          width: 0,
+                                                          width: 0.sp,
                                                           color: Color(int.parse(
                                                               hexColorString)))),
                                                 ),
-                                                width: 20,
-                                                height: 30,
+                                                width: 20.sp,
+                                                height: 30.sp,
                                               ),
                                               // 线路标识，圆形
                                               Container(
                                                 padding:
-                                                    EdgeInsets.only(left: 10),
+                                                    EdgeInsets.only(left: 10.w),
                                                 child: CircleAvatar(
                                                   backgroundColor: Color(
                                                       int.parse(
                                                           hexColorString)),
-                                                  radius: 12,
+                                                  radius: 12.r,
                                                   child: Text(
                                                     lineID,
                                                     style: TextStyle(
                                                         color: Colors.white,
-                                                        fontSize: 12),
+                                                        fontSize: 12.sp),
                                                   ),
                                                 ),
                                               ),
                                               // 站点名称
                                               Container(
                                                 padding:
-                                                    EdgeInsets.only(left: 10),
+                                                    EdgeInsets.only(left: 10.w),
                                                 child: Text(
                                                   "往 ${segmentlist[index ~/ 3]["directionName"]} 方向",
-                                                  style:
-                                                      TextStyle(fontSize: 16),
+                                                  style: TextStyle(
+                                                      fontSize: 16.sp),
                                                 ),
                                               )
                                             ]);
@@ -434,21 +437,21 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                         hexColorString)),
                                                     border: Border(
                                                         top: BorderSide(
-                                                            width: 0,
+                                                            width: 0.sp,
                                                             color: Color(int.parse(
                                                                 hexColorString))),
                                                         bottom: BorderSide(
-                                                            width: 0,
+                                                            width: 0.sp,
                                                             color: Color(int.parse(
                                                                 hexColorString)))),
                                                   ),
-                                                  width: 20,
-                                                  height: 30,
+                                                  width: 20.sp,
+                                                  height: 30.sp,
                                                 ),
                                                 // 乘坐几站，用时多少
                                                 Container(
-                                                  padding:
-                                                      EdgeInsets.only(left: 10),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.w),
                                                   child: Row(
                                                     children: [
                                                       arrow_icon_list[
@@ -456,11 +459,11 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       Container(
                                                         padding:
                                                             EdgeInsets.only(
-                                                                left: 5),
+                                                                left: 5.w),
                                                         child: Text(
                                                           "乘坐${passdepotcount}站 （约${drivertime}分钟）",
                                                           style: TextStyle(
-                                                              fontSize: 15),
+                                                              fontSize: 15.sp),
                                                         ),
                                                       ),
                                                     ],
@@ -495,28 +498,31 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                                       hexColorString)),
                                                               border: Border(
                                                                   top: BorderSide(
-                                                                      width: 0,
+                                                                      width:
+                                                                          0.sp,
                                                                       color: Color(
                                                                           int.parse(
                                                                               hexColorString))),
                                                                   bottom: BorderSide(
-                                                                      width: 0,
+                                                                      width:
+                                                                          0.sp,
                                                                       color: Color(
                                                                           int.parse(
                                                                               hexColorString)))),
                                                             ),
-                                                            width: 20,
-                                                            height: 30,
+                                                            width: 20.sp,
+                                                            height: 30.sp,
                                                           ),
                                                           // 站点名
                                                           Container(
                                                             padding:
                                                                 EdgeInsets.only(
-                                                                    left: 15),
+                                                                    left: 15.w),
                                                             child: Text(
                                                               "${passdepotname[id]}",
                                                               style: TextStyle(
-                                                                  fontSize: 16),
+                                                                  fontSize:
+                                                                      16.sp),
                                                             ),
                                                           ),
                                                         ]);
@@ -558,24 +564,24 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                               hexColorString_pre)),
                                                           border: Border(
                                                               top: BorderSide(
-                                                                  width: 0,
+                                                                  width: 0.sp,
                                                                   color: Color(
                                                                       int.parse(
                                                                           hexColorString_pre))),
                                                               bottom: BorderSide(
-                                                                  width: 0,
+                                                                  width: 0.sp,
                                                                   color: Color(
                                                                       int.parse(
                                                                           hexColorString_pre)))),
                                                         ),
-                                                        width: 20,
-                                                        height: 10,
+                                                        width: 20.sp,
+                                                        height: 10.sp,
                                                       ),
                                                       CircleAvatar(
                                                         backgroundColor: Color(
                                                             int.parse(
                                                                 hexColorString_pre)),
-                                                        radius: 10,
+                                                        radius: 10.sp,
                                                       ),
                                                     ],
                                                   ),
@@ -583,7 +589,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                   Stack(
                                                     children: [
                                                       Positioned(
-                                                        top: 10,
+                                                        top: 10.sp,
                                                         child: Container(
                                                           decoration:
                                                               BoxDecoration(
@@ -591,25 +597,25 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                                 hexColorString_after)),
                                                             border: Border(
                                                                 top: BorderSide(
-                                                                    width: 0,
+                                                                    width: 0.sp,
                                                                     color: Color(
                                                                         int.parse(
                                                                             hexColorString_after))),
                                                                 bottom: BorderSide(
-                                                                    width: 0,
+                                                                    width: 0.sp,
                                                                     color: Color(
                                                                         int.parse(
                                                                             hexColorString_after)))),
                                                           ),
-                                                          width: 20,
-                                                          height: 10,
+                                                          width: 20.sp,
+                                                          height: 10.sp,
                                                         ),
                                                       ),
                                                       CircleAvatar(
                                                         backgroundColor: Color(
                                                             int.parse(
                                                                 hexColorString_after)),
-                                                        radius: 10,
+                                                        radius: 10.sp,
                                                       ),
                                                     ],
                                                   ),
@@ -618,12 +624,12 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               // 站点名称
                                               Container(
                                                 padding:
-                                                    EdgeInsets.only(left: 10),
+                                                    EdgeInsets.only(left: 10.w),
                                                 child: Text(
                                                   segmentlist[index ~/ 3]
                                                       ["startname"],
-                                                  style:
-                                                      TextStyle(fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize: 20.sp),
                                                 ),
                                               )
                                             ]);
@@ -642,8 +648,8 @@ class _RouteResultPageState extends State<RouteResultPage>
                                             children: [
                                               // 实现左侧颜色条效果，底部半圆矩形块
                                               Container(
-                                                width: 20,
-                                                height: 30,
+                                                width: 20.sp,
+                                                height: 30.sp,
                                                 child: Stack(
                                                   alignment:
                                                       Alignment.topCenter,
@@ -655,27 +661,27 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                             hexColorString)),
                                                         border: Border(
                                                             top: BorderSide(
-                                                                width: 0,
+                                                                width: 0.sp,
                                                                 color: Color(
                                                                     int.parse(
                                                                         hexColorString))),
                                                             bottom: BorderSide(
-                                                                width: 0,
+                                                                width: 0.sp,
                                                                 color: Color(
                                                                     int.parse(
                                                                         hexColorString)))),
                                                       ),
-                                                      width: 20,
-                                                      height: 15,
+                                                      width: 20.sp,
+                                                      height: 15.sp,
                                                     ),
                                                     // 第二层，圆形
                                                     Positioned(
-                                                      top: 5,
+                                                      top: 5.sp,
                                                       child: CircleAvatar(
                                                         backgroundColor: Color(
                                                             int.parse(
                                                                 hexColorString)),
-                                                        radius: 10,
+                                                        radius: 10.sp,
                                                       ),
                                                     )
                                                   ],
@@ -684,12 +690,12 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               // 站点名称
                                               Container(
                                                 padding:
-                                                    EdgeInsets.only(left: 10),
+                                                    EdgeInsets.only(left: 10.w),
                                                 child: Text(
                                                   segmentlist[index ~/ 3 - 1]
                                                       ["endname"],
-                                                  style:
-                                                      TextStyle(fontSize: 20),
+                                                  style: TextStyle(
+                                                      fontSize: 20.sp),
                                                 ),
                                               )
                                             ]);
@@ -735,7 +741,8 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                 if (msg.message ==
                                                     "subwayCompleteSuccess") {
                                                   _webViewControllerList[index]
-                                                      ?.runJavascript("route()");
+                                                      ?.runJavascript(
+                                                          "route()");
                                                 }
                                               }),
                                           JavascriptChannel(
@@ -769,16 +776,19 @@ class _RouteResultPageState extends State<RouteResultPage>
                                         child: Container(
                                           color: Colors.lightBlue[100],
                                           child: ListTile(
-                                            horizontalTitleGap: 5,
+                                            horizontalTitleGap: 5.w,
                                             contentPadding: EdgeInsets.zero,
                                             title: Container(
-                                              margin: EdgeInsets.only(left: 15),
+                                              margin:
+                                                  EdgeInsets.only(left: 15.w),
                                               alignment: Alignment.center,
-                                              height: 40,
+                                              height: 40.h,
                                               child: ListView.separated(
                                                 shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: segmentlist.length + 1,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    segmentlist.length + 1,
                                                 itemBuilder:
                                                     (BuildContext context,
                                                         int index) {
@@ -796,18 +806,19 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                             .toString();
                                                     if (hexColorString.length ==
                                                         6) {
-                                                      hexColorString =
-                                                          "0xFF" + hexColorString;
+                                                      hexColorString = "0xFF" +
+                                                          hexColorString;
                                                     }
                                                     return CircleAvatar(
                                                       backgroundColor: Color(
                                                           int.parse(
                                                               hexColorString)),
-                                                      radius: 15,
+                                                      radius: 15.r,
                                                       child: Text(
                                                         lineID,
                                                         style: TextStyle(
-                                                            color: Colors.white),
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                     );
                                                   } else {
@@ -820,7 +831,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       child: Text(
                                                         "从 ${segmentlist[0]["startname"]} 至 ${segmentlist[segmentlist.length - 1]["endname"]}",
                                                         style: TextStyle(
-                                                            fontSize: 18),
+                                                            fontSize: 18.sp),
                                                         textAlign:
                                                             TextAlign.start,
                                                       ),
@@ -834,15 +845,16 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       segmentlist.length - 1) {
                                                     return Container(
                                                       margin: EdgeInsets.only(
-                                                          left: 5, right: 5),
+                                                          left: 5.w,
+                                                          right: 5.w),
                                                       child: Icon(
                                                         Icons.arrow_forward,
-                                                        size: 15,
+                                                        size: 15.r,
                                                       ),
                                                     );
                                                   }
                                                   return Container(
-                                                    width: 20,
+                                                    width: 20.w,
                                                   );
                                                 },
                                               ),
@@ -856,7 +868,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               },
                                               icon: Icon(
                                                   Icons.keyboard_arrow_right),
-                                              iconSize: 35,
+                                              iconSize: 35.r,
                                             ),
                                           ),
                                         ),
@@ -918,13 +930,13 @@ class _RouteResultPageState extends State<RouteResultPage>
                                       //     alignment: Alignment.center,
                                       //     child: Text("$index")),
                                       Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
+                                        left: 0.w,
+                                        right: 0.w,
+                                        bottom: 0.h,
                                         child: Container(
                                           color: Colors.lightBlue[100],
                                           child: ListTile(
-                                            horizontalTitleGap: 5,
+                                            horizontalTitleGap: 5.w,
                                             contentPadding: EdgeInsets.zero,
                                             leading: IconButton(
                                               onPressed: () {
@@ -935,11 +947,11 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               },
                                               icon: Icon(
                                                   Icons.keyboard_arrow_left),
-                                              iconSize: 35,
+                                              iconSize: 35.r,
                                             ),
                                             title: Container(
                                               alignment: Alignment.centerLeft,
-                                              height: 40,
+                                              height: 40.h,
                                               child: ListView(
                                                 shrinkWrap: true,
                                                 scrollDirection:
@@ -966,7 +978,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               },
                                               icon: Icon(
                                                   Icons.keyboard_arrow_right),
-                                              iconSize: 35,
+                                              iconSize: 35.r,
                                             ),
                                           ),
                                         ),
@@ -1024,13 +1036,13 @@ class _RouteResultPageState extends State<RouteResultPage>
                                       //   alignment: Alignment.center,
                                       // ),
                                       Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
+                                        left: 0.w,
+                                        right: 0.w,
+                                        bottom: 0.h,
                                         child: Container(
                                           color: Colors.lightBlue[100],
                                           child: ListTile(
-                                            horizontalTitleGap: 5,
+                                            horizontalTitleGap: 5.w,
                                             contentPadding: EdgeInsets.zero,
                                             leading: IconButton(
                                               onPressed: () {
@@ -1041,11 +1053,11 @@ class _RouteResultPageState extends State<RouteResultPage>
                                               },
                                               icon: Icon(
                                                   Icons.keyboard_arrow_left),
-                                              iconSize: 35,
+                                              iconSize: 35.r,
                                             ),
                                             title: Container(
                                               alignment: Alignment.centerLeft,
-                                              height: 40,
+                                              height: 40.h,
                                               child: ListView(
                                                 shrinkWrap: true,
                                                 scrollDirection:
@@ -1056,7 +1068,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                     child: Text(
                                                       "$index/${transitTimes + 2}   在${segmentlist[index - 2]["endname"]}下车",
                                                       style: TextStyle(
-                                                          fontSize: 18),
+                                                          fontSize: 18.sp),
                                                     ),
                                                   )
                                                 ],
@@ -1123,13 +1135,13 @@ class _RouteResultPageState extends State<RouteResultPage>
                                       //   alignment: Alignment.center,
                                       // ),
                                       Positioned(
-                                          left: 0,
-                                          right: 0,
-                                          bottom: 0,
+                                          left: 0.w,
+                                          right: 0.w,
+                                          bottom: 0.h,
                                           child: Container(
                                             color: Colors.lightBlue[100],
                                             child: ListTile(
-                                              horizontalTitleGap: 5,
+                                              horizontalTitleGap: 5.w,
                                               contentPadding: EdgeInsets.zero,
                                               leading: IconButton(
                                                 onPressed: () {
@@ -1140,11 +1152,11 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                 },
                                                 icon: Icon(
                                                     Icons.keyboard_arrow_left),
-                                                iconSize: 35,
+                                                iconSize: 35.r,
                                               ),
                                               title: Container(
                                                 alignment: Alignment.centerLeft,
-                                                height: 40,
+                                                height: 40.h,
                                                 child: ListView(
                                                   shrinkWrap: true,
                                                   scrollDirection:
@@ -1156,7 +1168,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                       child: Text(
                                                         "$index/${transitTimes + 2}   在${segmentlist[index - 1]["startname"]}换乘，乘坐${lineID}号线，前往${segmentlist[index - 1]["endname"]}",
                                                         style: TextStyle(
-                                                            fontSize: 18),
+                                                            fontSize: 18.sp),
                                                       ),
                                                     )
                                                   ],
@@ -1172,7 +1184,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                                 },
                                                 icon: Icon(
                                                     Icons.keyboard_arrow_right),
-                                                iconSize: 35,
+                                                iconSize: 35.r,
                                               ),
                                             ),
                                           ))

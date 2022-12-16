@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/picker_style.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -71,14 +72,15 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.only(top: 50, left: 15, right: 15, bottom: 20),
+        padding:
+            EdgeInsets.only(top: 50.h, left: 15.w, right: 15.w, bottom: 20.h),
         child: KeyboardDismissOnTap(
           dismissOnCapturedTaps: true,
           child: Column(
             children: [
               //取消和确定按钮
               Container(
-                padding: EdgeInsets.only(left: 5, right: 5),
+                padding: EdgeInsets.only(left: 5.w, right: 5.w),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,15 +91,15 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                         "取消",
                       ),
                       style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(Size(50, 5)),
+                        minimumSize: MaterialStateProperty.all(Size(50.w, 5.h)),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6))),
+                            borderRadius: BorderRadius.circular(6.r))),
                         side: MaterialStateProperty.all(
                             BorderSide(color: Colors.transparent)),
-                        padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(5.r)),
                         // 文本
-                        textStyle:
-                            MaterialStateProperty.all(TextStyle(fontSize: 18)),
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 18.sp)),
                         // 前景色
                         foregroundColor:
                             MaterialStateProperty.all(Colors.black),
@@ -112,15 +114,15 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                         "确定",
                       ),
                       style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(Size(50, 5)),
+                        minimumSize: MaterialStateProperty.all(Size(50.w, 5.h)),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6))),
+                            borderRadius: BorderRadius.circular(6.r))),
                         side: MaterialStateProperty.all(
                             BorderSide(color: Colors.transparent)),
-                        padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(5.r)),
                         // 文本
-                        textStyle:
-                            MaterialStateProperty.all(TextStyle(fontSize: 18)),
+                        textStyle: MaterialStateProperty.all(
+                            TextStyle(fontSize: 18.sp)),
                         // 前景色
                         foregroundColor:
                             MaterialStateProperty.all(Colors.black),
@@ -134,23 +136,23 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               //头像组件
               Container(
-                padding: EdgeInsets.only(top: 30, bottom: 5),
+                padding: EdgeInsets.only(top: 30.h, bottom: 5.h),
                 child: CircleAvatar(
-                  radius: 61,
+                  radius: 61.r,
                   backgroundColor: Colors.black,
                   child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(60.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(60.0.r)),
                     onTap: () => addImage(),
                     child: CircleAvatar(
                       foregroundImage: _headImage,
                       backgroundColor: Colors.white,
-                      radius: 60,
+                      radius: 60.r,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.add,
-                            size: 45,
+                            size: 45.r,
                             color: Colors.blue,
                           ),
                           Text(
@@ -165,24 +167,24 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               //输入昵称
               Container(
-                padding: EdgeInsets.only(left: 40, right: 40),
+                padding: EdgeInsets.only(left: 40.w, right: 40.w),
                 child: TextField(
                   maxLength: 10,
                   maxLines: 1,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20.sp),
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
                       hintText: "请输入昵称",
                       isCollapsed: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 10)),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10.h)),
                   focusNode: _nameFocusNode,
                   controller: _nameController,
                 ),
               ),
               // 填写城市
               Container(
-                padding: EdgeInsets.only(top: 20, left: 50, right: 80),
+                padding: EdgeInsets.only(top: 20.h, left: 50.w, right: 80.w),
                 child: Row(
                   children: [
                     Expanded(
@@ -191,24 +193,24 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                           color: Colors.grey[700],
                           onPressed: () => pickCity(),
                           icon: Icon(Icons.location_on),
-                          iconSize: 30,
+                          iconSize: 30.r,
                         )),
                     Expanded(
                       flex: 6,
                       child: Container(
-                        padding: EdgeInsets.only(left: 20, right: 10),
+                        padding: EdgeInsets.only(left: 20.w, right: 10.w),
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 8),
+                          padding: EdgeInsets.only(bottom: 8.h),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
-                                      width: 0.8,
+                                      width: 0.8.w,
                                       color: Colors.grey.shade400))),
                           child: Text(
                             _city,
                             style: TextStyle(
-                                color: Colors.grey[700], fontSize: 17),
+                                color: Colors.grey[700], fontSize: 17.sp),
                           ),
                         ),
                       ),
@@ -218,45 +220,45 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               // 填写家附近站点信息
               Container(
-                padding: EdgeInsets.only(top: 20, left: 35, right: 45),
+                padding: EdgeInsets.only(top: 20.h, left: 35.w, right: 45.w),
                 child: Row(
                   children: [
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10.h),
                           child: IconButton(
                             onPressed: () => pickStations("home"),
                             icon: Icon(Icons.home),
-                            iconSize: 30,
+                            iconSize: 30.r,
                             color: Colors.grey[700],
                           ),
                         )),
                     SizedBox(
-                      width: 10,
+                      width: 10.w,
                     ),
                     Expanded(
                         flex: 4,
                         child: Container(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                          padding: EdgeInsets.only(
+                              left: 10.w, right: 10.w, bottom: 10.h),
                           child: Container(
-                            padding: EdgeInsets.only(bottom: 8),
+                            padding: EdgeInsets.only(bottom: 8.h),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom: BorderSide(
-                                        width: 0.8,
+                                        width: 0.8.w,
                                         color: Colors.grey.shade400))),
                             child: Text(
                               _home,
                               style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 15),
+                                  color: Colors.grey[700], fontSize: 15.sp),
                             ),
                           ),
                         )),
                     SizedBox(
-                      width: 10,
+                      width: 10.w,
                     ),
                     Expanded(
                       flex: 2,
@@ -265,26 +267,27 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                         maxLength: 2,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 15.sp),
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                             hintText: "步行时长",
                             isCollapsed: true,
-                            contentPadding: EdgeInsets.symmetric(vertical: 10)),
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 10.h)),
                         focusNode: _walkHomeFocusNode,
                         controller: _walkHomeController,
                       ),
                     ),
                     SizedBox(
-                      width: 2,
+                      width: 2.w,
                     ),
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 22),
+                          padding: EdgeInsets.only(bottom: 22.h),
                           child: Text(
                             '分钟',
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 15.sp),
                           ),
                         )),
                   ],
@@ -292,46 +295,46 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               // 填写公司附近站点信息
               Container(
-                padding: EdgeInsets.only(top: 20, left: 35, right: 45),
+                padding: EdgeInsets.only(top: 20.h, left: 35.w, right: 45.w),
                 child: Row(
                   children: [
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: EdgeInsets.only(bottom: 10.h),
                           child: IconButton(
                             onPressed: () => pickStations("company"),
                             icon: Icon(Icons.location_city),
-                            iconSize: 30,
+                            iconSize: 30.r,
                             color: Colors.grey[700],
                           ),
                         )),
                     SizedBox(
-                      width: 10,
+                      width: 10.w,
                     ),
                     Expanded(
                       flex: 4,
                       child: Container(
-                        padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: EdgeInsets.only(
+                            left: 10.w, right: 10.w, bottom: 10.h),
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 8),
+                          padding: EdgeInsets.only(bottom: 8.h),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(
-                                      width: 0.8,
+                                      width: 0.8.w,
                                       color: Colors.grey.shade400))),
                           child: Text(
                             _company,
                             style: TextStyle(
-                                color: Colors.grey[700], fontSize: 15),
+                                color: Colors.grey[700], fontSize: 15.sp),
                           ),
                         ),
                       ),
                     ),
                     SizedBox(
-                      width: 10,
+                      width: 10.w,
                     ),
                     Expanded(
                       flex: 2,
@@ -340,26 +343,27 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                         maxLength: 2,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 15.sp),
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
                             hintText: "步行时长",
                             isCollapsed: true,
-                            contentPadding: EdgeInsets.symmetric(vertical: 10)),
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 10.h)),
                         focusNode: _walkCompanyFocusNode,
                         controller: _walkCompanyController,
                       ),
                     ),
                     SizedBox(
-                      width: 2,
+                      width: 2.w,
                     ),
                     Expanded(
                         flex: 1,
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 22),
+                          padding: EdgeInsets.only(bottom: 22.h),
                           child: Text(
                             '分钟',
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 15.sp),
                           ),
                         )),
                   ],
@@ -367,7 +371,7 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               // 添加常去车站
               Container(
-                padding: EdgeInsets.only(left: 40, right: 40, top: 15),
+                padding: EdgeInsets.only(left: 40.w, right: 40.w, top: 15.h),
                 child: TextButton(
                   onPressed: () {
                     // NavigatorUtils.pushPage(context: context, targPage: AddFrequentCities());
@@ -388,10 +392,10 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                   style: ButtonStyle(
                     side: MaterialStateProperty.all(
                         BorderSide(color: Colors.black)),
-                    padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                    padding: MaterialStateProperty.all(EdgeInsets.all(5.r)),
                     // 文本颜色
                     textStyle:
-                        MaterialStateProperty.all(TextStyle(fontSize: 15)),
+                        MaterialStateProperty.all(TextStyle(fontSize: 15.sp)),
                     // 前景色
                     foregroundColor: MaterialStateProperty.all(Colors.black),
                     // 按钮背景色
@@ -402,7 +406,7 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
               ),
               // 添加常去城市
               Container(
-                padding: EdgeInsets.only(left: 40, right: 40, top: 15),
+                padding: EdgeInsets.only(left: 40.w, right: 40.w, top: 15.h),
                 child: TextButton(
                   onPressed: () => _showMultiSelectCities(),
                   child: Row(
@@ -420,10 +424,10 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
                   style: ButtonStyle(
                     side: MaterialStateProperty.all(
                         BorderSide(color: Colors.black)),
-                    padding: MaterialStateProperty.all(EdgeInsets.all(5)),
+                    padding: MaterialStateProperty.all(EdgeInsets.all(5.r)),
                     // 文本颜色
                     textStyle:
-                        MaterialStateProperty.all(TextStyle(fontSize: 15)),
+                        MaterialStateProperty.all(TextStyle(fontSize: 15.sp)),
                     // 前景色
                     foregroundColor: MaterialStateProperty.all(Colors.black),
                     // 按钮背景色
@@ -686,8 +690,8 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
           },
           searchable: true,
           searchHint: "搜索城市",
-          cancelText: Text("取消", style: TextStyle(fontSize: 18)),
-          confirmText: Text("确认", style: TextStyle(fontSize: 18)),
+          cancelText: Text("取消", style: TextStyle(fontSize: 18.sp)),
+          confirmText: Text("确认", style: TextStyle(fontSize: 18.sp)),
           listType: MultiSelectListType.LIST,
           selectedColor: Colors.blue[300],
           title: Text("添加城市"),
@@ -749,8 +753,8 @@ class _ModifyInfoPageState extends State<ModifyInfoPage> {
           },
           searchable: true,
           searchHint: "搜索地铁站",
-          cancelText: Text("取消", style: TextStyle(fontSize: 18)),
-          confirmText: Text("确认", style: TextStyle(fontSize: 18)),
+          cancelText: Text("取消", style: TextStyle(fontSize: 18.sp)),
+          confirmText: Text("确认", style: TextStyle(fontSize: 18.sp)),
           listType: MultiSelectListType.LIST,
           selectedColor: Colors.blue[300],
           title: Text("添加地铁站"),

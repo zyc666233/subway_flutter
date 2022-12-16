@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subway_flutter/utils/log_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -36,8 +37,8 @@ class SearchBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SearchBar> createState() =>
-      _SearchBarState(this.hintText, this.webViewController, this.stationCallBack);
+  State<SearchBar> createState() => _SearchBarState(
+      this.hintText, this.webViewController, this.stationCallBack);
 }
 
 class _SearchBarState extends State<SearchBar> {
@@ -72,15 +73,15 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: new BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 0.0), //灰色的一层边框
+        border: Border.all(color: Colors.grey, width: 0.0.w), //灰色的一层边框
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(0)),
+        borderRadius: BorderRadius.all(Radius.circular(0.r)),
       ),
       alignment: Alignment.center,
       // width: 100,
-      height: 40,
+      height: 40.h,
       // margin: EdgeInsets.fromLTRB(24, 9, 9, 12),
-      padding: EdgeInsets.only(left: 6, right: 6),
+      padding: EdgeInsets.only(left: 6.w, right: 6.w),
       child: Row(
         children: [
           Expanded(
@@ -94,7 +95,7 @@ class _SearchBarState extends State<SearchBar> {
               child: InkWell(
                 child: Text(
                   showText,
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16.sp),
                 ),
                 onTap: () async {
                   //这里是跳转搜索界面的关键
@@ -220,11 +221,12 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text: query,
-                            style: TextStyle(color: Colors.black, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 18.sp))
                       ]),
                 ),
                 onTap: () {
@@ -236,7 +238,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
         : Center(
             child: Text(
               "没有搜索到此站点",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18.sp),
             ),
           );
   }
@@ -263,8 +265,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -273,7 +275,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -287,8 +290,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -297,7 +300,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -309,8 +313,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             return Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 style: ListTileStyle.list,
                 leading: Icon(
@@ -319,7 +323,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 ),
                 title: Text(
                   suggestionsList[index],
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style:
+                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   Navigator.of(context).pop(suggestionsList[index]);
@@ -331,8 +336,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
-                      bottom:
-                          BorderSide(width: 0.8, color: Colors.grey.shade400))),
+                      bottom: BorderSide(
+                          width: 0.8.w, color: Colors.grey.shade400))),
               child: ListTile(
                 leading: Icon(Icons.subway),
                 title: RichText(
@@ -342,12 +347,13 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                       children: [
                         TextSpan(
                             text:
                                 suggestionsList[index].substring(query.length),
-                            style: TextStyle(color: Colors.grey, fontSize: 18))
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 18.sp))
                       ]),
                 ),
               ),

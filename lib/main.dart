@@ -7,6 +7,7 @@ import 'pages/home_page.dart';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_flutter_asset/jaguar_flutter_asset.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -26,17 +27,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // title: '智慧出行demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      // routes: {
-      //   '/root': (context) => HomePage(),
-      //   '/welcome': (context) => WelcomePage(),
-      // },
-      home: const MyHomePage(title: 'subway_flutter'),
+    // 在 MaterialApp 组件外层包裹一层 ScreenUtilInit 组件
+    return ScreenUtilInit(
+      // 设置设计稿宽高（此处使用的我自己的小米10的实际宽高，单位为dp）
+      designSize: Size(392.73, 850.91),
+      // 设置原本要显示的 MaterialApp
+      builder: (BuildContext context, Widget? child) {
+        return MaterialApp(
+          // title: '智慧出行demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          // routes: {
+          //   '/root': (context) => HomePage(),
+          //   '/welcome': (context) => WelcomePage(),
+          // },
+          home: const MyHomePage(title: 'subway_flutter'),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ///自定义的listTitle,支持自定义标题栏布局
 const Duration _expandSpeed = Duration(milliseconds: 200);
@@ -160,7 +161,7 @@ class _UserExpansionTileState extends State<UserExpansionTile>
         // border: Border(
         //   bottom: BorderSide(color: borderSideColor),
         // ),
-        border: Border.all(color: Colors.transparent, width: 0),
+        border: Border.all(color: Colors.transparent, width: 0.w),
       ),
       child: Column(
         children: [

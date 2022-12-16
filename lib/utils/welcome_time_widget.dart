@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:subway_flutter/pages/home_page.dart';
 
 import 'log_utils.dart';
@@ -57,21 +58,21 @@ class _WelcomeTimeWidgetState extends State<WelcomeTimeWidget> {
     return Container(
       decoration: BoxDecoration(
           //边框样式设置
-          border: Border.all(color: Colors.white, width: 2),
+          border: Border.all(color: Colors.white, width: 2.w),
           //边框圆角设置
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: BorderRadius.all(Radius.circular(20.r))),
       //子Widget 居中
       alignment: Alignment.center,
       child: Text(
         "${currentTime}s",
         style: TextStyle(
           fontWeight: FontWeight.w500,
-          fontSize: 16,
+          fontSize: 16.sp,
           color: Colors.white,
         ),
       ),
-      width: 100,
-      height: 33,
+      width: 100.w,
+      height: 33.h,
     );
   }
 
