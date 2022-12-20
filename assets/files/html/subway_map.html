@@ -14,9 +14,10 @@
     <script src="../js/adcode.js"></script>
     <script src='https://webapi.amap.com/subway?v=1.0&key=3043c15b975dd817161c4dc5239046cd&callback=cbk'></script>
     <script type="text/javascript">
-        var mySubway, startInfo, endInfo, stationTouchID;
+        var mySubway, startInfo, endInfo, stationTouchID, optFlag;
         // var city = "上海市";
         window.cbk = function () {
+            optFlag = true
             createMap()
             // setAdcode(city)
         };
@@ -36,6 +37,7 @@
             // 地铁加载完成，执行complete事件
             mySubway.event.on("subway.complete", function (ev, info) {
                 var id = info.id;
+                subwayCompletedCallFlutter.postMessage("subway.complet")
                 // mySubway.getCityList(function (citys){
                 //     // console.log(citys);
                 //     var json_data = JSON.stringify(citys);
@@ -72,52 +74,62 @@
                 //     stationTouchID = info.id;
                 //     touchStation(stationTouchID)
                 // }
-                touchStation(info.id)
-                console.log(stationTouchID)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                touchStationCallFlutter.postMessage(json_data);
+                if (optFlag) {
+                    touchStation(info.id)
+                    console.log(stationTouchID)
+                    var json_data = JSON.stringify(info);
+                    console.log(json_data)
+                    touchStationCallFlutter.postMessage(json_data);
+                }
             });
 
             // 点击线路名，高亮此线路
             mySubway.event.on("lineName.touch", function (ev, info) {
-                // console.log(info)
-                mySubway.showLine(info.id);
-                // var select_obj = qs('#g-select');
-                // mySubway.setFitView("mybox");
-                var center = mySubway.getSelectedLineCenter();
-                mySubway.setCenter(center);
+                if (optFlag) {
+                    // console.log(info)
+                    mySubway.showLine(info.id);
+                    // var select_obj = qs('#g-select');
+                    // mySubway.setFitView("mybox");
+                    var center = mySubway.getSelectedLineCenter();
+                    mySubway.setCenter(center);
+                }
             });
 
             // 点击空白处
             mySubway.event.on("subway.touch", function () {
-                mySubway.clearInfoWindow();
-                mySubway.clearLine();
-                if (stationTouchID != null) {
-                    mySubway.clearMarker(stationTouchID)
-                    stationTouchID = null
+                if (optFlag) {
+                    mySubway.clearInfoWindow();
+                    mySubway.clearLine();
+                    if (stationTouchID != null) {
+                        mySubway.clearMarker(stationTouchID)
+                        stationTouchID = null
+                    }
+                    console.log(stationTouchID)
+                    // mySubway.clearOverlays()
+                    clearStart();
+                    clearEnd();
+                    touchMapCallFlutter.postMessage("true")
                 }
-                console.log(stationTouchID)
-                // mySubway.clearOverlays()
-                clearStart();
-                clearEnd();
-                touchMapCallFlutter.postMessage("true")
             });
 
             // 设置起点
             mySubway.event.on("startStation.touch", function (ev, info) {
-                setStartStation(info.id)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                stationBackCallFlutter.postMessage(json_data);
+                if (optFlag) {
+                    setStartStation(info.id)
+                    var json_data = JSON.stringify(info);
+                    console.log(json_data)
+                    stationBackCallFlutter.postMessage(json_data);
+                }
             });
 
             // 设置终点
             mySubway.event.on("endStation.touch", function (ev, info) {
-                setEndStation(info.id)
-                var json_data = JSON.stringify(info);
-                console.log(json_data)
-                stationBackCallFlutter.postMessage(json_data);
+                if (optFlag) {
+                    setStartStation(info.id)
+                    var json_data = JSON.stringify(info);
+                    console.log(json_data)
+                    stationBackCallFlutter.postMessage(json_data);
+                }
             });
 
             startInfo = {};
@@ -125,11 +137,13 @@
 
             // 路径规划完毕后触发此事件
             mySubway.event.on("subway.routeComplete", function (ev, info) {
-                // var json_data = JSON.stringify(ev);
-                // console.log(json_data);
-                var json_data = JSON.stringify(info);
-                // console.log(json_data);
-                routeCompletedCallFlutter.postMessage(json_data)
+                if (optFlag) {
+                    // var json_data = JSON.stringify(ev);
+                    // console.log(json_data);
+                    var json_data = JSON.stringify(info);
+                    // console.log(json_data);
+                    routeCompletedCallFlutter.postMessage(json_data)
+                }
             });
         }
 
@@ -240,6 +254,16 @@
                 station_list = json_data
             })
             return station_list
+        }
+
+        // 允许地图的各种事件
+        function allowOpt() {
+            optFlag = true
+        }
+
+        // 暂时屏蔽地图的各类事件
+        function stopOpt() {
+            optFlag = false
         }
 
     </script>

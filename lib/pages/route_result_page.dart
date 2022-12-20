@@ -474,6 +474,7 @@ class _RouteResultPageState extends State<RouteResultPage>
                                             MediaQuery.removePadding(
                                               context: context,
                                               removeTop: true,
+                                              removeBottom: true,
                                               child: ListView.builder(
                                                   itemCount: int.parse(
                                                       segmentlist[index ~/ 3]
